@@ -7,6 +7,8 @@ import HeroImg1 from "../../assets/images/banner-1.jpg";
 import HeroImg2 from "../../assets/images/banner-2.jpg";
 
 import "swiper/css";
+import LatestProducts from "./LatestProducts";
+import FeaturedProducts from "./FeaturedProducts";
 const Home = () => {
   return (
     <>
@@ -81,6 +83,8 @@ const Home = () => {
           </SwiperSlide>
         </Swiper>
       </section>
+      <LatestProducts />
+      <FeaturedProducts />
     </>
   );
 };

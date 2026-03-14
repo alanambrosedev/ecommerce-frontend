@@ -96,10 +96,12 @@ header .navbar-expand-lg .navbar-nav .nav-link {
 
 .section-1 {
     .swiper {
-        .swiper-wrapper{
+        .swiper-wrapper {
             .swiper-slide {
                 height: 550px;
-            }.content {
+            }
+
+            .content {
                 height: 100%;
                 width: 100%;
                 background-repeat: no-repeat;
@@ -107,4 +109,39 @@ header .navbar-expand-lg .navbar-nav .nav-link {
             }
         }
     }
+}
+
+.product {
+    .card-img {
+        overflow: hidden;
+        border-radius: 10px;
+
+        img {
+            border-radius: 10px;
+        }
+    }
+
+    &:hover {
+        img {
+            scale: 1.2;
+            transition: all 0.3s ease-out;
+        }
+    }
+
+    .card-body {
+        padding: 0;
+
+        a {
+            font-size: 1.2em;
+        }
+
+        .price {
+            font-size: 1.2em;
+
+            span {
+                color: rgba($primary-black, 0.6);
+            }
+        }
+    }
+
 }
