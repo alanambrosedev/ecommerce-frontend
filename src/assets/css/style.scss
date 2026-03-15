@@ -94,6 +94,31 @@ header .navbar-expand-lg .navbar-nav .nav-link {
     color: $primary-black;
 }
 
+footer {
+    background-color: $tertiary-color;
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    ul {
+        li {
+            margin-bottom: 10px;
+
+            a {
+                font-size: 1.2em;
+                color: $primary-white;
+
+            }
+        }
+    }
+
+    .spotlight {
+        border-top: 1px solid rgba($primary-white, 0.10);
+        border-bottom: 1px solid rgba($primary-white, 0.10);
+    }
+}
+
 .section-1 {
     .swiper {
         .swiper-wrapper {
