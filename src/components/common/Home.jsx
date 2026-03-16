@@ -88,13 +88,13 @@ const Home = () => {
       <footer className="py-5 text-white">
         <div className="container">
           <div className="row">
-            <div className="col-md-3">
+            <div className="col-md-3 py-4">
               <img src={LogoImg} alt="" width={150} />
               <div className="pt-3 pe-5">
                 Lorem ipsum dolor, sit amet consectetur
               </div>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 py-5">
               <h2 className="mb-3">Categories</h2>
               <ul>
                 <li>
@@ -108,7 +108,7 @@ const Home = () => {
                 </li>
               </ul>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 py-4">
               <h2 className="mb-3">Quick Links</h2>
               <ul>
                 <li>
@@ -119,7 +119,7 @@ const Home = () => {
                 </li>
               </ul>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 py-4">
               <h2 className="mb-3">Get in Touch</h2>
               <ul>
                 <li>
@@ -134,7 +134,7 @@ const Home = () => {
         </div>
         <div className="container">
           <div className="row spotlight py-5">
-            <div className="col-md-4">
+            <div className="col-md-4 py-3">
               <div className="d-flex justify-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@ const Home = () => {
                 <h3 className="ps-2">Free Delivery</h3>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 py-3">
               <div className="d-flex justify-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +167,7 @@ const Home = () => {
                 <h3 className="ps-2">Money Back Guarantee</h3>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 py-3">
               <div className="d-flex justify-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

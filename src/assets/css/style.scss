@@ -162,6 +162,7 @@ footer {
 
         .price {
             font-size: 1.2em;
+            padding-bottom: 10px;
 
             span {
                 color: rgba($primary-black, 0.6);
@@ -169,4 +170,14 @@ footer {
         }
     }
 
+}
+
+@media (min-width: 200px) and (max-width:768px) {
+    .swiper {
+        .swiper-wrapper {
+            .swiper-slide {
+                height: 300px;
+            }
+        }
+    }
 }
