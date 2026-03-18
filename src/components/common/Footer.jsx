@@ -12,7 +12,7 @@ const Footer = () => {
               Lorem ipsum dolor, sit amet consectetur
             </div>
           </div>
-          <div className="col-md-3 py-5">
+          <div className="col-md-3 py-4">
             <h2 className="mb-3">Categories</h2>
             <ul>
               <li>
