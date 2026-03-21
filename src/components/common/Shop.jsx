@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "./Layout";
-import ProductImg from "../../assets/images/Mens/fivee.jpg";
+import ProductImg from "../../assets/images/mens/fivee.jpg";
+import { Link } from "react-router-dom";
 const Shop = () => {
   return (
     <>
@@ -80,10 +81,12 @@ const Shop = () => {
                 <div className="col-md-4 col-6">
                   <div className="product card border-0">
                     <div className="card-img">
-                      <img src={ProductImg} alt="" className="w-100" />
+                      <Link to="/product">
+                        <img src={ProductImg} alt="" className="w-100" />
+                      </Link>
                     </div>
                     <div className="card-body pt-2">
-                      <a href="">Violet Stripped Tshirt-Polo</a>
+                      <Link to="/product">Violet Stripped Tshirt-Polo</Link>
                       <div className="price">
                         $50
                         <span className="text-decoration-line-through">

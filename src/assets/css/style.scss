@@ -176,6 +176,14 @@ footer {
 
 }
 
+.product-detail {
+    .mySwiper {
+        .swiper-slide {
+            height: auto !important;
+        }
+    }
+}
+
 @media (min-width: 200px) and (max-width:768px) {
     .swiper {
         .swiper-wrapper {

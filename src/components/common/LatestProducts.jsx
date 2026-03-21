@@ -1,5 +1,5 @@
 import React from "react";
-import ProductImg from "../../assets/images/Mens/fivee.jpg";
+import ProductImg from "../../assets/images/mens/fivee.jpg";
 
 const LatestProducts = () => {
   return (
