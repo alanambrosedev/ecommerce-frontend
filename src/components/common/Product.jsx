@@ -10,9 +10,12 @@ import "swiper/css/thumbs";
 import ProductImgOne from "../../assets/images/mens/five.jpg";
 import ProductImgTwo from "../../assets/images/mens/seven.jpg";
 import ProductImgThree from "../../assets/images/mens/twelve.jpg";
+import { Rating } from "react-simple-star-rating";
 
 const Product = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [rating, setRating] = useState(4);
+
   return (
     <Layout>
       <div className="container product-detail">
@@ -117,7 +120,30 @@ const Product = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-7"></div>
+          <div className="col-md-7">
+            <h2>Dummy Product Title</h2>
+            <div className="d-flex">
+              <Rating size={20} readonly initialValue={rating} />
+              <span className="pt-1 ps-2">1022 reviews</span>
+            </div>
+            <div className="price h3 py-3">
+              $20 <span className="text-decoration-line-through">$180</span>
+            </div>
+            <div>
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. <br />
+              Alias esse voluptatem officia temporibus quod expedita! Recusandae
+              <br />
+              odio voluptas laboriosam dignissimos!
+            </div>
+            <div className="pt-3">
+              <strong>Select Size</strong>
+              <div className="sizes pt-2">
+                <button className="btn btn-size ms-1">S</button>
+                <button className="btn btn-size ms-1">M</button>
+                <button className="btn btn-size ms-1">L</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>
