@@ -1,6 +1,6 @@
 import React from "react";
-import Layout from "./Layout";
-import ProductImg from "../../assets/images/mens/fivee.jpg";
+import Layout from "./common/Layout";
+import ProductImg from "../assets/images/mens/fivee.jpg";
 import { Link } from "react-router-dom";
 const Shop = () => {
   return (
