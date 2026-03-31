@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "./common/Layout";
 import { Link } from "react-router-dom";
+import ProductImgOne from "../assets/images/mens/six.jpg";
 
 const Checkout = () => {
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const handlePaymentMethod = (e) => {
+    setPaymentMethod(e.target.value);
+  };
   return (
     <Layout>
       <div className="container pb-5">
@@ -92,6 +97,80 @@ const Checkout = () => {
                 </div>
               </div>
             </form>
+          </div>
+          <div className="col-md-5">
+            <h3 className="border-bottom pb-3">
+              <strong>Items</strong>
+            </h3>
+            <table className="table">
+              <tbody>
+                <tr>
+                  <td width={100}>
+                    <img src={ProductImgOne} width={80} alt="Product" />
+                  </td>
+                  <td width={600}>
+                    <h4>Dummy Product</h4>
+                    <div className="d-flex align-items-center py-2">
+                      <span>$10</span>
+                      <div className="ps-3">
+                        <button className="btn btn-size my-1">S</button>
+                      </div>
+                      <div className="ps-5">X 1</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="d-flex justify-content-between border-bottom pb-2">
+                  <div>
+                    <strong>Sub-Total:</strong>
+                  </div>
+                  <div>$2000</div>
+                </div>
+                <div className="d-flex justify-content-between border-bottom pb-2">
+                  <div>
+                    <strong>Shipping:</strong>
+                  </div>
+                  <div>$30</div>
+                </div>
+                <div className="d-flex justify-content-between py-3">
+                  <div>
+                    <strong>Grand Total:</strong>
+                  </div>
+                  <div>$2030</div>
+                </div>
+              </div>
+            </div>
+            <h3 className="border-bottom pt-3 pb-3">
+              <strong>Payment Method</strong>
+            </h3>
+            <div className="">
+              <input
+                onClick={handlePaymentMethod}
+                type="radio"
+                value={"stripe"}
+                checked={paymentMethod == "stripe"}
+                className="ms-2"
+              />
+              <label htmlFor="" className="form-label ps-2">
+                Stripe
+              </label>
+              <input
+                onClick={handlePaymentMethod}
+                type="radio"
+                value={"cod"}
+                checked={paymentMethod == "cod"}
+                className="ms-2"
+              />
+              <label htmlFor="" className="form-label ps-2">
+                COD
+              </label>
+            </div>
+            <div className="d-flex pt-4 pb-3">
+              <button className="btn btn-primary">Pay Now</button>
+            </div>
           </div>
         </div>
       </div>
