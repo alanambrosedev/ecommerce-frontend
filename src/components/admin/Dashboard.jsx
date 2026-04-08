@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import Layout from "../common/Layout";
+import { AdminAuthContext } from "../context/AdminAuth";
 
 const Dashboard = () => {
-  return <Layout></Layout>;
+  const { logout } = useContext(AdminAuthContext);
+  return (
+    <Layout>
+      <h2>Dashboard</h2>
+      <button className="btn btn-danger" onClick={logout}>
+        Logout
+      </button>
+    </Layout>
+  );
 };
 
 export default Dashboard;
