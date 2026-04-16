@@ -8,6 +8,7 @@ import Login from "./components/admin/Login";
 import Dashboard from "./components/admin/Dashboard";
 import { ToastContainer } from "react-toastify";
 import { AdminAuthRequire } from "./components/admin/AdminAuthRequire";
+import { default as CategoryShow } from "./components/admin/category/Show";
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
             element={
               <AdminAuthRequire>
                 <Dashboard />
+              </AdminAuthRequire>
+            }
+          />
+          <Route
+            path="/admin/categories"
+            element={
+              <AdminAuthRequire>
+                <CategoryShow />
               </AdminAuthRequire>
             }
           />
