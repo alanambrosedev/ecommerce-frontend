@@ -39,7 +39,7 @@ const Show = () => {
         <div className="row">
           <div className="d-flex justify-content-between mt-5 pb-3">
             <h4 className="h4 pb-0 mb-0">Dashboard</h4>
-            <Link className="btn btn-primary" to="">
+            <Link className="btn btn-primary" to="/admin/categories/create">
               Create
             </Link>
           </div>
