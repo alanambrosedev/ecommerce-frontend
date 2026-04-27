@@ -11,6 +11,7 @@ import { AdminAuthRequire } from "./components/admin/AdminAuthRequire";
 import { default as CategoryShow } from "./components/admin/category/Show";
 import { default as CategoryCreate } from "./components/admin/category/Create";
 import { default as CategoryEdit } from "./components/admin/category/Edit";
+import { default as BrandShow } from "./components/admin/brand/Show";
 
 function App() {
   return (
@@ -55,6 +56,14 @@ function App() {
               </AdminAuthRequire>
             }
           />
+          <Route
+            path="/admin/brands"
+            element={
+              <AdminAuthRequire>
+                <BrandShow />
+              </AdminAuthRequire>
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
       <ToastContainer />
