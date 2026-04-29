@@ -3,3 +3,4 @@ export const adminToken = () => {
   const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
   return adminInfo.token;
 };
+/*  */
