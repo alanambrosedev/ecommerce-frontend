@@ -3,7 +3,7 @@ import Layout from "../../common/Layout";
 import Sidebar from "../../common/Sidebar";
 import { Link } from "react-router-dom";
 import { adminToken, apiUrl } from "../../common/Http";
-import Loader from "../../common/loader";
+import Loader from "../../common/Loader";
 import NoState from "../../common/NoState";
 import { toast } from "react-toastify";
 
