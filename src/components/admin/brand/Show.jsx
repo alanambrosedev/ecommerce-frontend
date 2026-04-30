@@ -56,10 +56,10 @@ const Show = () => {
                   <table className="table table-hover">
                     <thead>
                       <tr>
-                        <th>ID</th>
+                        <th width="50">ID</th>
                         <th>Name</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th width="100">Status</th>
+                        <th width="100">Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -70,11 +70,11 @@ const Show = () => {
                             <td>{brand.name}</td>
                             <td>
                               {brand.status == 1 ? (
-                                <span className="badge text-success">
+                                <span className="badge text-bg-success">
                                   Active
                                 </span>
                               ) : (
-                                <span className="badge text-danger">
+                                <span className="badge text-bg-danger">
                                   Inactive
                                 </span>
                               )}
