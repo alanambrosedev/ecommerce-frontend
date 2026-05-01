@@ -61,7 +61,6 @@ const Create = () => {
                       {...register("name", {
                         required: "The name field is required.",
                       })}
-                      type="name"
                       className={`form-control ${
                         errors.name ? "is-invalid" : ""
                       }`}
