@@ -80,7 +80,10 @@ const Show = () => {
                               )}
                             </td>
                             <td>
-                              <Link className="text-primary">
+                              <Link
+                                className="text-primary"
+                                to={`/admin/brands/edit/${brand.id}`}
+                              >
                                 <svg
                                   stroke="currentColor"
                                   fill="currentColor"

@@ -75,7 +75,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/admin/brands/edit:id"
+            path="/admin/brands/edit/:id"
             element={
               <AdminAuthRequire>
                 <BrandEdit />
