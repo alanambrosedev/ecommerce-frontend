@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../common/Sidebar";
 import Layout from "../../common/Layout";
 import { Link } from "react-router-dom";
 import { adminToken, apiUrl } from "../../common/Http";
 
 const Show = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const fetchProducts = async () => {
     try {
       const res = await fetch(`${apiUrl}products`, {
@@ -20,9 +22,9 @@ const Show = () => {
         throw new Error("Failed to fetch products");
       }
       const result = await res.json();
-      console.log(result);
+      setProducts(result.data);
     } catch (error) {
-      console.log(error);
+      console.error("Error in fetching brands: ", error);
     }
   };
   useEffect(() => {
