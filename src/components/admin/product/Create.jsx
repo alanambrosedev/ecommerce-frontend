@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { adminToken, apiUrl } from "../../common/Http";
 const Create = () => {
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const {
     register,
     handleSubmit,
@@ -52,8 +53,24 @@ const Create = () => {
     const result = await res.json();
     setCategories(result.data);
   };
+  const fetchBrands = async () => {
+    const res = await fetch(`${apiUrl}brands`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch brands");
+    }
+    const result = await res.json();
+    setBrands(result.data);
+  };
   useEffect(() => {
     fetchCategories();
+    fetchBrands();
   }, []);
   return (
     <Layout>
@@ -113,6 +130,17 @@ const Create = () => {
                         </label>
                         <select name="" id="" className="form-control">
                           <option value="">Select a Brand</option>
+                          {brands &&
+                            brands.map((brand) => {
+                              return (
+                                <option
+                                  key={brand - `${brand.id}`}
+                                  value={brand.id}
+                                >
+                                  {brand.name}
+                                </option>
+                              );
+                            })}
                         </select>
                       </div>
                     </div>
