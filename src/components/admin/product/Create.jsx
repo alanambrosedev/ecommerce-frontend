@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import Layout from "../../common/Layout";
 import Sidebar from "../../common/Sidebar";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,9 +6,22 @@ import { register } from "swiper/element";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { adminToken, apiUrl } from "../../common/Http";
-const Create = () => {
+import JoditEditor from "jodit-react";
+
+const Create = ({ placeholder }) => {
+  const editor = useRef(null);
+  const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: placeholder || "",
+    }),
+    [placeholder],
+  );
+
   const {
     register,
     handleSubmit,
@@ -145,31 +158,131 @@ const Create = () => {
                       </div>
                     </div>
                   </div>
-                  <div>
+                  <div className="mb-3">
                     <label htmlFor="" className="form-label">
-                      Status
+                      Short Description
                     </label>
-                    <select
+                    <textarea
+                      className="form-control"
                       name=""
-                      id=""
-                      {...register("status", {
-                        required: "The status field is required.",
-                      })}
-                      className={`form-control ${errors.status ? "is-invalid" : ""}`}
-                    >
-                      <option value="">Select an option</option>
-                      <option value="1">Active</option>
-                      <option value="0">Inactive</option>
-                    </select>
-                    {errors.status && (
-                      <p className="invalid-feedback">
-                        {errors.status.message}
-                      </p>
-                    )}
+                      placeholder="Short Description"
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="" className="form-label">
+                      Description
+                    </label>
+                    <JoditEditor
+                      ref={editor}
+                      value={content}
+                      config={config}
+                      tabIndex={1}
+                      onBlur={(newContent) => setContent(newContent)}
+                    />
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Pricing</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Price
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Price"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Discounted Price
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Discounted Price"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Inventory</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          SKU
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="price"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Bar Code
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Bar Code"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          QTY
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Quantity"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Status
+                        </label>
+                        <select
+                          name=""
+                          id=""
+                          {...register("status", {
+                            required: "The status field is required.",
+                          })}
+                          className={`form-control ${errors.status ? "is-invalid" : ""}`}
+                        >
+                          <option value="">Select an option</option>
+                          <option value="1">Active</option>
+                          <option value="0">Inactive</option>
+                        </select>
+                        {errors.status && (
+                          <p className="invalid-feedback">
+                            {errors.status.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Gallery</h3>
+                  <div className="mb-3">
+                    <label htmlFor="" className="form-label">
+                      Image
+                    </label>
+                    <input type="file" className="form-control" />
                   </div>
                 </div>
               </div>
-              <button className="btn btn-primary mt-3">Create</button>
+              <button className="btn btn-primary mt-3 mb-5">Create</button>
             </form>
           </div>
         </div>
