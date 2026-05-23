@@ -120,7 +120,14 @@ const Create = ({ placeholder }) => {
                         <label className="form-label" htmlFor="">
                           Category
                         </label>
-                        <select name="" id="" className="form-control">
+                        <select
+                          name=""
+                          id=""
+                          {...register("category", {
+                            required: "The category field is required.",
+                          })}
+                          className={`form-control ${errors.category ? "is-invalid" : ""}`}
+                        >
                           <option value="">Select a Category</option>
                           {categories &&
                             categories.map((category) => {
@@ -134,6 +141,11 @@ const Create = ({ placeholder }) => {
                               );
                             })}
                         </select>
+                        {errors.category && (
+                          <p className="invalid-feedback">
+                            {errors.category.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="col-md-6">
@@ -189,9 +201,17 @@ const Create = ({ placeholder }) => {
                         </label>
                         <input
                           type="text"
+                          {...register("price", {
+                            required: "The price field is required.",
+                          })}
+                          className={`form-control ${errors.price ? "is-invalid" : ""}`}
                           placeholder="Price"
-                          className="form-control"
                         />
+                        {errors.price && (
+                          <p className="invalid-feedback">
+                            {errors.price.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="col-md-6">
@@ -216,9 +236,17 @@ const Create = ({ placeholder }) => {
                         </label>
                         <input
                           type="text"
+                          {...register("sku", {
+                            required: "The sku field is required.",
+                          })}
+                          className={`form-control ${errors.sku ? "is-invalid" : ""}`}
                           placeholder="price"
-                          className="form-control"
                         />
+                        {errors.sku && (
+                          <p className="invalid-feedback">
+                            {errors.sku.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="col-md-6">
@@ -271,6 +299,28 @@ const Create = ({ placeholder }) => {
                           </p>
                         )}
                       </div>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="" className="form-label">
+                        Featured
+                      </label>
+                      <select
+                        name=""
+                        id=""
+                        {...register("is_featured", {
+                          required: "The featured field is required.",
+                        })}
+                        className={`form-control ${errors.is_featured ? "is-invalid" : ""}`}
+                      >
+                        <option value="">Select an option</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                      </select>
+                      {errors.is_featured && (
+                        <p className="invalid-feedback">
+                          {errors.is_featured.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <h3 className="py-3 border-bottom mb-3">Gallery</h3>
