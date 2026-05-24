@@ -29,6 +29,8 @@ const Create = ({ placeholder }) => {
   } = useForm();
   const navigate = useNavigate();
   const onSubmit = async (data) => {
+    const formData = { ...data, description: content };
+
     try {
       const res = await fetch(`${apiUrl}products`, {
         method: "POST",
@@ -37,7 +39,7 @@ const Create = ({ placeholder }) => {
           Accept: "application/json",
           Authorization: `Bearer ${adminToken()}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
       const result = await res.json();
       if (res.ok && res.status == 200) {
@@ -153,7 +155,12 @@ const Create = ({ placeholder }) => {
                         <label className="form-label" htmlFor="">
                           Brands
                         </label>
-                        <select name="" id="" className="form-control">
+                        <select
+                          name=""
+                          id=""
+                          {...register("brand")}
+                          className="form-control"
+                        >
                           <option value="">Select a Brand</option>
                           {brands &&
                             brands.map((brand) => {
@@ -175,6 +182,7 @@ const Create = ({ placeholder }) => {
                       Short Description
                     </label>
                     <textarea
+                      {...register("short_description")}
                       className="form-control"
                       name=""
                       placeholder="Short Description"
@@ -223,6 +231,7 @@ const Create = ({ placeholder }) => {
                           type="text"
                           placeholder="Discounted Price"
                           className="form-control"
+                          {...register("compare_price")}
                         />
                       </div>
                     </div>
@@ -258,6 +267,7 @@ const Create = ({ placeholder }) => {
                           type="text"
                           placeholder="Bar Code"
                           className="form-control"
+                          {...register("bar_code")}
                         />
                       </div>
                     </div>
@@ -273,6 +283,7 @@ const Create = ({ placeholder }) => {
                           type="text"
                           placeholder="Quantity"
                           className="form-control"
+                          {...register("qty")}
                         />
                       </div>
                     </div>
