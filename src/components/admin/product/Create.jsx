@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import Layout from "../../common/Layout";
 import Sidebar from "../../common/Sidebar";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "swiper/element";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { adminToken, apiUrl } from "../../common/Http";
@@ -30,6 +29,10 @@ const Create = ({ placeholder }) => {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     const formData = { ...data, description: content };
+
+    console.log("Form Data being submitted:", formData);
+    console.log("Short Description:", data.short_description);
+    console.log("Description/Content:", content);
 
     try {
       const res = await fetch(`${apiUrl}products`, {
@@ -134,10 +137,7 @@ const Create = ({ placeholder }) => {
                           {categories &&
                             categories.map((category) => {
                               return (
-                                <option
-                                  key={category - `${category.id}`}
-                                  value={category.id}
-                                >
+                                <option key={category.id} value={category.id}>
                                   {category.name}
                                 </option>
                               );
@@ -165,10 +165,7 @@ const Create = ({ placeholder }) => {
                           {brands &&
                             brands.map((brand) => {
                               return (
-                                <option
-                                  key={brand - `${brand.id}`}
-                                  value={brand.id}
-                                >
+                                <option key={brand.id} value={brand.id}>
                                   {brand.name}
                                 </option>
                               );
@@ -184,7 +181,6 @@ const Create = ({ placeholder }) => {
                     <textarea
                       {...register("short_description")}
                       className="form-control"
-                      name=""
                       placeholder="Short Description"
                     ></textarea>
                   </div>
@@ -198,6 +194,7 @@ const Create = ({ placeholder }) => {
                       config={config}
                       tabIndex={1}
                       onBlur={(newContent) => setContent(newContent)}
+                      onChange={(newContent) => setContent(newContent)}
                     />
                   </div>
                   <h3 className="py-3 border-bottom mb-3">Pricing</h3>
@@ -249,7 +246,7 @@ const Create = ({ placeholder }) => {
                             required: "The sku field is required.",
                           })}
                           className={`form-control ${errors.sku ? "is-invalid" : ""}`}
-                          placeholder="price"
+                          placeholder="Sku"
                         />
                         {errors.sku && (
                           <p className="invalid-feedback">

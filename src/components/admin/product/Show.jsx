@@ -67,7 +67,7 @@ const Show = () => {
                     <tbody>
                       {products.map((product) => {
                         return (
-                          <tr>
+                          <tr key={product.id}>
                             <td>{product.id}</td>
                             <td>
                               {
