@@ -103,7 +103,6 @@ const Create = ({ placeholder }) => {
       }
       const result = await res.json();
       setGallery([...gallery, result.image.id]);
-      toast.success("Image uploaded successfully");
     } catch (error) {
       console.error(error);
       toast.error("Error uploading image");
