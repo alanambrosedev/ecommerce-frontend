@@ -24,36 +24,31 @@ const Create = ({ placeholder }) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     const formData = { ...data, description: content };
 
-    console.log("Form Data being submitted:", formData);
-    console.log("Short Description:", data.short_description);
-    console.log("Description/Content:", content);
-
-    try {
-      const res = await fetch(`${apiUrl}products`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${adminToken()}`,
-        },
-        body: JSON.stringify(formData),
+    const res = await fetch(`${apiUrl}products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+      body: JSON.stringify(formData),
+    });
+    const result = await res.json();
+    if (res.ok && res.status == 200) {
+      toast.success(result.message);
+      navigate("/admin/products");
+    } else {
+      const formErrors = result.errors;
+      Object.keys(formErrors).forEach((field) => {
+        setError(field, { message: formErrors[field][0] });
       });
-      const result = await res.json();
-      if (res.ok && res.status == 200) {
-        toast.success(result.message);
-        navigate("/admin/products");
-      } else {
-        toast.error(result.message || "Failed to add the brand.");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong.");
     }
   };
   const fetchCategories = async () => {
