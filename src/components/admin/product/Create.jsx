@@ -12,6 +12,7 @@ const Create = ({ placeholder }) => {
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [gallery, setGallery] = useState([]);
 
   const config = useMemo(
     () => ({
@@ -29,7 +30,7 @@ const Create = ({ placeholder }) => {
   } = useForm();
   const navigate = useNavigate();
   const onSubmit = async (data) => {
-    const formData = { ...data, description: content };
+    const formData = { ...data, description: content, gallery: gallery };
 
     const res = await fetch(`${apiUrl}products`, {
       method: "POST",
@@ -80,6 +81,33 @@ const Create = ({ placeholder }) => {
     }
     const result = await res.json();
     setBrands(result.data);
+  };
+  const handleFile = async (e) => {
+    const formData = new FormData();
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    formData.append("image", file);
+    try {
+      const res = await fetch(`${apiUrl}temp-images`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+        body: formData,
+      });
+      if (!res.ok) {
+        throw new Error("Failed to upload image");
+      }
+      const result = await res.json();
+      setGallery([...gallery, result.image.id]);
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error uploading image");
+    }
   };
   useEffect(() => {
     fetchCategories();
@@ -331,7 +359,12 @@ const Create = ({ placeholder }) => {
                     <label htmlFor="" className="form-label">
                       Image
                     </label>
-                    <input type="file" className="form-control" />
+                    <input
+                      type="file"
+                      {...register("image")}
+                      onChange={handleFile}
+                      className="form-control"
+                    />
                   </div>
                 </div>
               </div>
