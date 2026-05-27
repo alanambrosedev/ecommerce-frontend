@@ -13,7 +13,7 @@ const Create = ({ placeholder }) => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [gallery, setGallery] = useState([]);
-
+  const [galleryImages, setGalleryImages] = useState([]);
   const config = useMemo(
     () => ({
       readonly: false,
@@ -102,7 +102,15 @@ const Create = ({ placeholder }) => {
         throw new Error("Failed to upload image");
       }
       const result = await res.json();
-      setGallery([...gallery, result.image.id]);
+      console.log("Upload response:", result);
+      if (result.image && result.image.image_url) {
+        setGallery([...gallery, result.image.id]);
+        setGalleryImages([...galleryImages, result.image.image_url]);
+        toast.success("Image uploaded successfully");
+      } else {
+        console.error("Unexpected response structure:", result);
+        toast.error("Invalid response structure from server");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Error uploading image");
@@ -364,6 +372,24 @@ const Create = ({ placeholder }) => {
                       onChange={handleFile}
                       className="form-control"
                     />
+                    <div className="mb-3">
+                      <div className="row">
+                        {galleryImages &&
+                          galleryImages.map((image, index) => {
+                            return image ? (
+                              <div className="col-md-3" key={index}>
+                                <div className="card shadow">
+                                  <img
+                                    src={image}
+                                    alt="preview"
+                                    className="w-100"
+                                  />
+                                </div>
+                              </div>
+                            ) : null;
+                          })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
