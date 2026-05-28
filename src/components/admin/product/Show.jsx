@@ -70,13 +70,18 @@ const Show = () => {
                           <tr key={product.id}>
                             <td>{product.id}</td>
                             <td>
-                              {
+                              {product.image_url == "" ? (
+                                <img
+                                  src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"
+                                  width={50}
+                                />
+                              ) : (
                                 <img
                                   src={product.image_url}
                                   alt=""
                                   width={50}
                                 />
-                              }
+                              )}
                             </td>
                             <td>{product.title}</td>
                             <td>{product.price}</td>

@@ -116,6 +116,10 @@ const Create = ({ placeholder }) => {
       toast.error("Error uploading image");
     }
   };
+  const handleImageDelete = (image) => {
+    const newGallery = galleryImages.filter((gallery) => gallery != image);
+    setGalleryImages(newGallery);
+  };
   useEffect(() => {
     fetchCategories();
     fetchBrands();
@@ -384,6 +388,12 @@ const Create = ({ placeholder }) => {
                                     alt="preview"
                                     className="w-100"
                                   />
+                                  <button
+                                    className="btn btn-danger"
+                                    onClick={() => handleImageDelete(image)}
+                                  >
+                                    Delete
+                                  </button>
                                 </div>
                               </div>
                             ) : null;
