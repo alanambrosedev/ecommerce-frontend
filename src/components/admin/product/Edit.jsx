@@ -1,7 +1,393 @@
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import Layout from "../../common/Layout";
+import Sidebar from "../../common/Sidebar";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { adminToken, apiUrl } from "../../common/Http";
+import JoditEditor from "jodit-react";
 
-const Edit = () => {
-  return <div></div>;
+const Edit = ({ placeholder }) => {
+  const params = useParams();
+  const editor = useRef(null);
+  const [content, setContent] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [gallery, setGallery] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [product, setProduct] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: placeholder || "",
+    }),
+    [placeholder],
+  );
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm({
+    defaultValues: async () => {
+      try {
+        const res = await fetch(`${apiUrl}products/${params.id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${adminToken()}`,
+          },
+        });
+        const result = await res.json();
+
+        if (res.ok && result.status == 200) {
+          setProduct(result.data);
+          setContent(result.data.description);
+          reset({
+            title: result.data.title,
+            category: result.data.category_id,
+            brand: result.data.brand_id,
+            short_description: result.data.short_description,
+            price: result.data.price,
+            sku: result.data.sku,
+            bar_code: result.data.bar_code,
+            qty: result.data.qty,
+            description: result.data.description,
+            is_featured: result.data.is_featured,
+            status: result.data.status,
+            compare_price: result.data.compare_price,
+          });
+        }
+      } catch (error) {
+        toast.error(error.message || "Failed to load brand.");
+      }
+    },
+  });
+
+  const navigate = useNavigate();
+
+  const fetchCategories = async () => {
+    const res = await fetch(`${apiUrl}categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch categories");
+    }
+    const result = await res.json();
+    setCategories(result.data);
+  };
+  const fetchBrands = async () => {
+    const res = await fetch(`${apiUrl}brands`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch brands");
+    }
+    const result = await res.json();
+    setBrands(result.data);
+  };
+  useEffect(() => {
+    fetchCategories();
+    fetchBrands();
+  }, []);
+  return (
+    <Layout>
+      <div className="container">
+        <div className="row">
+          <div className="d-flex justify-content-between mt-5 pb-3">
+            <h4 className="h4 pb-0 mb-0">Products / Edit</h4>
+            <Link to="/admin/products" className="btn btn-primary">
+              Back
+            </Link>
+          </div>
+          <Sidebar />
+          <div className="col-md-9">
+            <form action="">
+              <div className="card shadow">
+                <div className="card-body">
+                  <div className="">
+                    <label className="form-label">Title</label>
+                    <input
+                      type="text"
+                      {...register("title", {
+                        required: "The title field is required.",
+                      })}
+                      className={`form-control ${errors.title ? "is-invalid" : ""}`}
+                      placeholder="Enter product name"
+                    />
+                    {errors.title && (
+                      <p className="invalid-feedback">{errors.title.message}</p>
+                    )}
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label" htmlFor="">
+                          Category
+                        </label>
+                        <select
+                          name=""
+                          id=""
+                          {...register("category", {
+                            required: "The category field is required.",
+                          })}
+                          className={`form-control ${errors.category ? "is-invalid" : ""}`}
+                        >
+                          <option value="">Select a Category</option>
+                          {categories &&
+                            categories.map((category) => {
+                              return (
+                                <option key={category.id} value={category.id}>
+                                  {category.name}
+                                </option>
+                              );
+                            })}
+                        </select>
+                        {errors.category && (
+                          <p className="invalid-feedback">
+                            {errors.category.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label" htmlFor="">
+                          Brands
+                        </label>
+                        <select
+                          name=""
+                          id=""
+                          {...register("brand")}
+                          className="form-control"
+                        >
+                          <option value="">Select a Brand</option>
+                          {brands &&
+                            brands.map((brand) => {
+                              return (
+                                <option key={brand.id} value={brand.id}>
+                                  {brand.name}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="" className="form-label">
+                      Short Description
+                    </label>
+                    <textarea
+                      {...register("short_description")}
+                      className="form-control"
+                      placeholder="Short Description"
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="" className="form-label">
+                      Description
+                    </label>
+                    <JoditEditor
+                      ref={editor}
+                      value={content}
+                      config={config}
+                      tabIndex={1}
+                      onBlur={(newContent) => setContent(newContent)}
+                      onChange={(newContent) => setContent(newContent)}
+                    />
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Pricing</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Price
+                        </label>
+                        <input
+                          type="text"
+                          {...register("price", {
+                            required: "The price field is required.",
+                          })}
+                          className={`form-control ${errors.price ? "is-invalid" : ""}`}
+                          placeholder="Price"
+                        />
+                        {errors.price && (
+                          <p className="invalid-feedback">
+                            {errors.price.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Discounted Price
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Discounted Price"
+                          className="form-control"
+                          {...register("compare_price")}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Inventory</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          SKU
+                        </label>
+                        <input
+                          type="text"
+                          {...register("sku", {
+                            required: "The sku field is required.",
+                          })}
+                          className={`form-control ${errors.sku ? "is-invalid" : ""}`}
+                          placeholder="Sku"
+                        />
+                        {errors.sku && (
+                          <p className="invalid-feedback">
+                            {errors.sku.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Bar Code
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Bar Code"
+                          className="form-control"
+                          {...register("bar_code")}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          QTY
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Quantity"
+                          className="form-control"
+                          {...register("qty")}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label htmlFor="" className="form-label">
+                          Status
+                        </label>
+                        <select
+                          name=""
+                          id=""
+                          {...register("status", {
+                            required: "The status field is required.",
+                          })}
+                          className={`form-control ${errors.status ? "is-invalid" : ""}`}
+                        >
+                          <option value="">Select an option</option>
+                          <option value="1">Active</option>
+                          <option value="0">Inactive</option>
+                        </select>
+                        {errors.status && (
+                          <p className="invalid-feedback">
+                            {errors.status.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="" className="form-label">
+                        Featured
+                      </label>
+                      <select
+                        name=""
+                        id=""
+                        {...register("is_featured", {
+                          required: "The featured field is required.",
+                        })}
+                        className={`form-control ${errors.is_featured ? "is-invalid" : ""}`}
+                      >
+                        <option value="">Select an option</option>
+                        <option value="yes">Active</option>
+                        <option value="no">Inactive</option>
+                      </select>
+                      {errors.is_featured && (
+                        <p className="invalid-feedback">
+                          {errors.is_featured.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Gallery</h3>
+                  <div className="mb-3">
+                    <label htmlFor="" className="form-label">
+                      Image
+                    </label>
+                    <input
+                      type="file"
+                      {...register("image")}
+                      // onChange={handleFile}
+                      className="form-control"
+                    />
+                    <div className="mb-3">
+                      <div className="row">
+                        {galleryImages &&
+                          galleryImages.map((image, index) => {
+                            return image ? (
+                              <div className="col-md-3" key={index}>
+                                <div className="card shadow">
+                                  <img
+                                    src={image}
+                                    alt="preview"
+                                    className="w-100"
+                                  />
+                                  <button
+                                    className="btn btn-danger"
+                                    onClick={() => handleImageDelete(image)}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            ) : null;
+                          })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button className="btn btn-primary mt-3 mb-5">Update</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
 };
 
 export default Edit;
