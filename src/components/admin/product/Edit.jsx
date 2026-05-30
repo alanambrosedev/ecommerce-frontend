@@ -12,8 +12,7 @@ const Edit = ({ placeholder }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
-  const [gallery, setGallery] = useState([]);
-  const [galleryImages, setGalleryImages] = useState([]);
+  const [productImages, setProductImages] = useState([]);
   const [product, setProduct] = useState([]);
   const [brands, setBrands] = useState([]);
   const config = useMemo(
@@ -45,6 +44,7 @@ const Edit = ({ placeholder }) => {
         if (res.ok && result.status == 200) {
           setProduct(result.data);
           setContent(result.data.description);
+          setProductImages(result.data.product_images);
           reset({
             title: result.data.title,
             category: result.data.category_id,
@@ -356,23 +356,23 @@ const Edit = ({ placeholder }) => {
                     />
                     <div className="mb-3">
                       <div className="row">
-                        {galleryImages &&
-                          galleryImages.map((image, index) => {
+                        {productImages &&
+                          productImages.map((image, index) => {
                             return image ? (
                               <div className="col-md-3" key={index}>
                                 <div className="card shadow">
                                   <img
-                                    src={image}
+                                    src={image.image_url}
                                     alt="preview"
                                     className="w-100"
                                   />
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() => handleImageDelete(image)}
-                                  >
-                                    Delete
-                                  </button>
                                 </div>
+                                <button
+                                  className="btn btn-danger mt-3 w-100"
+                                  onClick={() => handleImageDelete(image)}
+                                >
+                                  Delete
+                                </button>
                               </div>
                             ) : null;
                           })}

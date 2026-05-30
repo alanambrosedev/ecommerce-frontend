@@ -388,13 +388,13 @@ const Create = ({ placeholder }) => {
                                     alt="preview"
                                     className="w-100"
                                   />
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() => handleImageDelete(image)}
-                                  >
-                                    Delete
-                                  </button>
                                 </div>
+                                <button
+                                  className="btn btn-danger mt-3 w-100"
+                                  onClick={() => handleImageDelete(image)}
+                                >
+                                  Delete
+                                </button>
                               </div>
                             ) : null;
                           })}
