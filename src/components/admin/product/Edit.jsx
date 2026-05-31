@@ -67,7 +67,45 @@ const Edit = ({ placeholder }) => {
   });
 
   const navigate = useNavigate();
+  const handleFile = async (e) => {
+    const formData = new FormData();
+    const file = e.target.files[0];
 
+    if (!file) return;
+
+    formData.append("product_id", product.id);
+    formData.append("image", file);
+    console.log(formData);
+    try {
+      const res = await fetch(`${apiUrl}save-product-image`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+        body: formData,
+      });
+      if (!res.ok) {
+        throw new Error("Failed to upload image");
+      }
+      const result = await res.json();
+      console.log("Upload response:", result);
+      if (result.image && result.image.image_url) {
+        setProductImages((prev) => [...prev, result.image]);
+        toast.success("Image uploaded successfully");
+      } else {
+        console.error("Unexpected response structure:", result);
+        toast.error("Invalid response structure from server");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error uploading image");
+    }
+  };
+
+  const handleImageDelete = (image) => {
+    setProductImages((prev) => prev.filter((img) => img.id !== image.id));
+  };
   const fetchCategories = async () => {
     const res = await fetch(`${apiUrl}categories`, {
       method: "GET",
@@ -82,6 +120,24 @@ const Edit = ({ placeholder }) => {
     }
     const result = await res.json();
     setCategories(result.data);
+  };
+  const changeImage = async (image) => {
+    const formData = new FormData();
+    formData.append("product_id", product.id);
+    formData.append("image", image.image);
+    const res = await fetch(`${apiUrl}change-product-default-image`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+      body: formData,
+    });
+    if (!res.ok) {
+      throw new Error("Failed to change default image.");
+    }
+    const result = await res.json();
+    toast.success("Image updated successfully");
   };
   const fetchBrands = async () => {
     const res = await fetch(`${apiUrl}brands`, {
@@ -351,7 +407,7 @@ const Edit = ({ placeholder }) => {
                     <input
                       type="file"
                       {...register("image")}
-                      // onChange={handleFile}
+                      onChange={handleFile}
                       className="form-control"
                     />
                     <div className="mb-3">
@@ -368,10 +424,18 @@ const Edit = ({ placeholder }) => {
                                   />
                                 </div>
                                 <button
+                                  type="button"
                                   className="btn btn-danger mt-3 w-100"
                                   onClick={() => handleImageDelete(image)}
                                 >
                                   Delete
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary mt-3 w-100"
+                                  onClick={() => changeImage(image)}
+                                >
+                                  Set as Default
                                 </button>
                               </div>
                             ) : null;
