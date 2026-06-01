@@ -139,7 +139,7 @@ const Create = ({ placeholder }) => {
             <form action="" onSubmit={handleSubmit(onSubmit)}>
               <div className="card shadow">
                 <div className="card-body">
-                  <div className="">
+                  <div className="mb-3">
                     <label className="form-label">Title</label>
                     <input
                       type="text"

@@ -13,6 +13,7 @@ const Edit = ({ placeholder }) => {
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
   const [productImages, setProductImages] = useState([]);
+  const [sizes, setSizes] = useState([]);
   const [product, setProduct] = useState([]);
   const [brands, setBrands] = useState([]);
   const config = useMemo(
@@ -121,6 +122,21 @@ const Edit = ({ placeholder }) => {
     const result = await res.json();
     setCategories(result.data);
   };
+  const fetchSizes = async () => {
+    const res = await fetch(`${apiUrl}sizes`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch categories");
+    }
+    const result = await res.json();
+    setSizes(result.data);
+  };
   const changeImage = async (image) => {
     const formData = new FormData();
     formData.append("product_id", product.id);
@@ -157,6 +173,7 @@ const Edit = ({ placeholder }) => {
   useEffect(() => {
     fetchCategories();
     fetchBrands();
+    fetchSizes();
   }, []);
   return (
     <Layout>
@@ -173,7 +190,7 @@ const Edit = ({ placeholder }) => {
             <form action="">
               <div className="card shadow">
                 <div className="card-body">
-                  <div className="">
+                  <div className="mb-3">
                     <label className="form-label">Title</label>
                     <input
                       type="text"
@@ -399,6 +416,31 @@ const Edit = ({ placeholder }) => {
                       )}
                     </div>
                   </div>
+                  <div className="mb-3">
+                    <label htmlFor="" className="form-label">
+                      Sizes
+                    </label>
+                    {sizes &&
+                      sizes.map((size) => {
+                        return (
+                          <div className="form-check-inline ps-2" key={size.id}>
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              value={size.id}
+                              id={`size-${size.id}`}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor={`size-${size.id}`}
+                            >
+                              {size.name}
+                            </label>
+                          </div>
+                        );
+                      })}
+                  </div>
+
                   <h3 className="py-3 border-bottom mb-3">Gallery</h3>
                   <div className="mb-3">
                     <label htmlFor="" className="form-label">
