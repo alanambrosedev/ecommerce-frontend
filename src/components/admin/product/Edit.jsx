@@ -16,6 +16,7 @@ const Edit = ({ placeholder }) => {
   const [sizes, setSizes] = useState([]);
   const [product, setProduct] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [sizeChecked, setSizeChecked] = useState([]);
   const config = useMemo(
     () => ({
       readonly: false,
@@ -46,7 +47,10 @@ const Edit = ({ placeholder }) => {
           setProduct(result.data);
           setContent(result.data.description);
           setProductImages(result.data.product_images);
-          reset({
+          const sizeIds = result.productSizes
+            ? result.productSizes.map((id) => String(id))
+            : [];
+          return {
             title: result.data.title,
             category: result.data.category_id,
             brand: result.data.brand_id,
@@ -58,12 +62,14 @@ const Edit = ({ placeholder }) => {
             description: result.data.description,
             is_featured: result.data.is_featured,
             status: result.data.status,
+            sizes: sizeIds,
             compare_price: result.data.compare_price,
-          });
+          };
         }
       } catch (error) {
         toast.error(error.message || "Failed to load brand.");
       }
+      return {};
     },
   });
 
@@ -170,6 +176,29 @@ const Edit = ({ placeholder }) => {
     const result = await res.json();
     setBrands(result.data);
   };
+  const onSubmit = async (data) => {
+    const formData = { ...data, description: content };
+
+    const res = await fetch(`${apiUrl}products/${params.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+      body: JSON.stringify(formData),
+    });
+    const result = await res.json();
+    if (res.ok && res.status == 200) {
+      toast.success(result.message);
+      navigate("/admin/products");
+    } else {
+      const formErrors = result.errors;
+      Object.keys(formErrors).forEach((field) => {
+        setError(field, { message: formErrors[field][0] });
+      });
+    }
+  };
   useEffect(() => {
     fetchCategories();
     fetchBrands();
@@ -187,7 +216,7 @@ const Edit = ({ placeholder }) => {
           </div>
           <Sidebar />
           <div className="col-md-9">
-            <form action="">
+            <form action="" onSubmit={handleSubmit(onSubmit)}>
               <div className="card shadow">
                 <div className="card-body">
                   <div className="mb-3">
@@ -425,13 +454,14 @@ const Edit = ({ placeholder }) => {
                         return (
                           <div className="form-check-inline ps-2" key={size.id}>
                             <input
+                              {...register("sizes")}
                               type="checkbox"
                               className="form-check-input"
                               value={size.id}
                               id={`size-${size.id}`}
                             />
                             <label
-                              className="form-check-label"
+                              className="form-check-label ps-2"
                               htmlFor={`size-${size.id}`}
                             >
                               {size.name}
