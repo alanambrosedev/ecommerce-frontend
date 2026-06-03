@@ -110,8 +110,25 @@ const Edit = ({ placeholder }) => {
     }
   };
 
-  const handleImageDelete = (image) => {
-    setProductImages((prev) => prev.filter((img) => img.id !== image.id));
+  const handleImageDelete = async (id) => {
+    try {
+      const res = await fetch(`${apiUrl}delete-product-image/${id}`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
+      const resImage = await res.json();
+      if (!res.ok) {
+        throw new Error(resImage.message || "Failed to delete image");
+      }
+      setProductImages((prev) => prev.filter((gallery) => gallery.id !== id));
+      toast.success(resImage.message);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Error deleting image");
+    }
   };
   const fetchCategories = async () => {
     const res = await fetch(`${apiUrl}categories`, {
@@ -506,7 +523,7 @@ const Edit = ({ placeholder }) => {
                                 <button
                                   type="button"
                                   className="btn btn-danger mt-3 w-100"
-                                  onClick={() => handleImageDelete(image)}
+                                  onClick={() => handleImageDelete(image.id)}
                                 >
                                   Delete
                                 </button>
