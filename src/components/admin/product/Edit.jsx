@@ -445,10 +445,9 @@ const Edit = ({ placeholder }) => {
                       )}
                     </div>
                   </div>
+
+                  <h3 className="py-3 border-bottom mb-3">Sizes</h3>
                   <div className="mb-3">
-                    <label htmlFor="" className="form-label">
-                      Sizes
-                    </label>
                     {sizes &&
                       sizes.map((size) => {
                         return (
@@ -459,6 +458,15 @@ const Edit = ({ placeholder }) => {
                               className="form-check-input"
                               value={size.id}
                               id={`size-${size.id}`}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSizeChecked((prev) => [...prev, size.id]);
+                                } else {
+                                  setSizeChecked((prev) =>
+                                    prev.filter((id) => id != size.id),
+                                  );
+                                }
+                              }}
                             />
                             <label
                               className="form-check-label ps-2"

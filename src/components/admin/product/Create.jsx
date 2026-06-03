@@ -14,6 +14,9 @@ const Create = ({ placeholder }) => {
   const [brands, setBrands] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [galleryImages, setGalleryImages] = useState([]);
+  const [sizeChecked, setSizeChecked] = useState([]);
+  const [sizes, setSizes] = useState([]);
+
   const config = useMemo(
     () => ({
       readonly: false,
@@ -66,6 +69,21 @@ const Create = ({ placeholder }) => {
     }
     const result = await res.json();
     setCategories(result.data);
+  };
+  const fetchSizes = async () => {
+    const res = await fetch(`${apiUrl}sizes`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch categories");
+    }
+    const result = await res.json();
+    setSizes(result.data);
   };
   const fetchBrands = async () => {
     const res = await fetch(`${apiUrl}brands`, {
@@ -123,6 +141,7 @@ const Create = ({ placeholder }) => {
   useEffect(() => {
     fetchCategories();
     fetchBrands();
+    fetchSizes();
   }, []);
   return (
     <Layout>
@@ -364,6 +383,38 @@ const Create = ({ placeholder }) => {
                         </p>
                       )}
                     </div>
+                  </div>
+                  <h3 className="py-3 border-bottom mb-3">Sizes</h3>
+                  <div className="mb-3">
+                    {sizes &&
+                      sizes.map((size) => {
+                        return (
+                          <div className="form-check-inline ps-2" key={size.id}>
+                            <input
+                              {...register("sizes")}
+                              type="checkbox"
+                              className="form-check-input"
+                              value={size.id}
+                              id={`size-${size.id}`}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSizeChecked((prev) => [...prev, size.id]);
+                                } else {
+                                  setSizeChecked((prev) =>
+                                    prev.filter((id) => id != size.id),
+                                  );
+                                }
+                              }}
+                            />
+                            <label
+                              className="form-check-label ps-2"
+                              htmlFor={`size-${size.id}`}
+                            >
+                              {size.name}
+                            </label>
+                          </div>
+                        );
+                      })}
                   </div>
                   <h3 className="py-3 border-bottom mb-3">Gallery</h3>
                   <div className="mb-3">
