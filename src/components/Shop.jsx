@@ -1,8 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "./common/Layout";
 import ProductImg from "../assets/images/mens/fivee.jpg";
 import { Link } from "react-router-dom";
+import { adminToken, apiUrl } from "./common/Http";
 const Shop = () => {
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [products, setProducts] = useState([]);
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${apiUrl}get-categories`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories.");
+      }
+      const result = await response.json();
+      setCategories(result.data);
+    } catch (error) {
+      console.error("Failed to fetch categories.", error);
+    }
+  };
+  const fetchBrands = async () => {
+    try {
+      const response = await fetch(`${apiUrl}get-brands`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch brands.");
+      }
+      const result = await response.json();
+      setBrands(result.data);
+    } catch (error) {
+      console.error("Failed to fetch brands.", error);
+    }
+  };
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`${apiUrl}get-products`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch products.");
+      }
+      const result = await response.json();
+      setProducts(result.data);
+    } catch (error) {
+      console.error("Failed to fetch products.", error);
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+    fetchBrands();
+    fetchProducts();
+  }, []);
   return (
     <>
       <Layout>
@@ -23,24 +89,17 @@ const Shop = () => {
                 <div className="card p-4">
                   <h3 className="mb-3">Categories</h3>
                   <ul>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Kids
-                      </label>
-                    </li>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Women
-                      </label>
-                    </li>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Men
-                      </label>
-                    </li>
+                    {categories &&
+                      categories.map((category) => {
+                        return (
+                          <li className="mb-2" key={category.id}>
+                            <input type="checkbox" />
+                            <label htmlFor="" className="ps-2">
+                              {category.name}
+                            </label>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               </div>
@@ -48,134 +107,52 @@ const Shop = () => {
                 <div className="card p-4">
                   <h3 className="mb-3">Brands</h3>
                   <ul>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Nike
-                      </label>
-                    </li>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Puma
-                      </label>
-                    </li>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Adidas
-                      </label>
-                    </li>
-                    <li className="mb-2">
-                      <input type="checkbox" />
-                      <label htmlFor="" className="ps-2">
-                        Vans
-                      </label>
-                    </li>
+                    {brands &&
+                      brands.map((brand) => {
+                        return (
+                          <li className="mb-2" key={brand.id}>
+                            <input type="checkbox" />
+                            <label htmlFor="" className="ps-2">
+                              {brand.name}
+                            </label>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               </div>
             </div>
             <div className="col-md-9">
               <div className="row">
-                <div className="col-md-4 col-6">
-                  <div className="product card border-0">
-                    <div className="card-img">
-                      <Link to="/product">
-                        <img src={ProductImg} alt="" className="w-100" />
-                      </Link>
-                    </div>
-                    <div className="card-body pt-2">
-                      <Link to="/product">Violet Stripped Tshirt-Polo</Link>
-                      <div className="price">
-                        $50
-                        <span className="text-decoration-line-through">
-                          $90
-                        </span>
+                {products &&
+                  products.map((product) => {
+                    return (
+                      <div className="col-md-4 col-6" key={product.id}>
+                        <div className="product card border-0">
+                          <div className="card-img">
+                            <Link to="/product">
+                              <img
+                                src={product.image_url}
+                                alt=""
+                                className="w-100"
+                              />
+                            </Link>
+                          </div>
+                          <div className="card-body pt-2">
+                            <Link to="/product">{product.title}</Link>
+                            <div className="price">
+                              ${product.price} &nbsp;
+                              {product.compare_price && (
+                                <span className="text-decoration-line-through">
+                                  ${product.compare_price}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 col-6">
-                  <div className="product card border-0">
-                    <div className="card-img">
-                      <img src={ProductImg} alt="" className="w-100" />
-                    </div>
-                    <div className="card-body pt-2">
-                      <a href="">Violet Stripped Tshirt-Polo</a>
-                      <div className="price">
-                        $50
-                        <span className="text-decoration-line-through">
-                          $90
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 col-6">
-                  <div className="product card border-0">
-                    <div className="card-img">
-                      <img src={ProductImg} alt="" className="w-100" />
-                    </div>
-                    <div className="card-body pt-2">
-                      <a href="">Violet Stripped Tshirt-Polo</a>
-                      <div className="price">
-                        $50
-                        <span className="text-decoration-line-through">
-                          $90
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 col-6">
-                  <div className="product card border-0">
-                    <div className="card-img">
-                      <img src={ProductImg} alt="" className="w-100" />
-                    </div>
-                    <div className="card-body pt-2">
-                      <a href="">Violet Stripped Tshirt-Polo</a>
-                      <div className="price">
-                        $50
-                        <span className="text-decoration-line-through">
-                          $90
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 col-6">
-                  <div className="product card border-0">
-                    <div className="card-img">
-                      <img src={ProductImg} alt="" className="w-100" />
-                    </div>
-                    <div className="card-body pt-2">
-                      <a href="">Violet Stripped Tshirt-Polo</a>
-                      <div className="price">
-                        $50
-                        <span className="text-decoration-line-through">
-                          $90
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 col-6">
-                  <div className="product card border-0">
-                    <div className="card-img">
-                      <img src={ProductImg} alt="" className="w-100" />
-                    </div>
-                    <div className="card-body pt-2">
-                      <a href="">Violet Stripped Tshirt-Polo</a>
-                      <div className="price">
-                        $50
-                        <span className="text-decoration-line-through">
-                          $90
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    );
+                  })}
               </div>
             </div>
           </div>
