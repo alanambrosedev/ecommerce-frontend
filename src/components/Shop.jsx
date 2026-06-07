@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./common/Layout";
 import ProductImg from "../assets/images/mens/fivee.jpg";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { adminToken, apiUrl } from "./common/Http";
 const Shop = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
-  const [catChecked, setCatChecked] = useState([]);
-  const [brandChecked, setBrandChecked] = useState([]);
+  const [catChecked, setCatChecked] = useState(() => {
+    const category = searchParams.get("category");
+    return category ? category.split(",") : [];
+  });
+  const [brandChecked, setBrandChecked] = useState(() => {
+    const brand = searchParams.get("brand");
+    return brand ? brand.split(",") : [];
+  });
+
   const fetchCategories = async () => {
     try {
       const response = await fetch(`${apiUrl}get-categories`, {
@@ -58,6 +66,9 @@ const Shop = () => {
     }
     if (search.length > 0) {
       params = new URLSearchParams(search);
+      setSearchParams(params);
+    } else {
+      setSearchParams([]);
     }
 
     try {
@@ -126,6 +137,13 @@ const Shop = () => {
                         <li className="mb-2" key={category.id}>
                           <input
                             type="checkbox"
+                            defaultChecked={
+                              searchParams.get("category")
+                                ? searchParams
+                                    .get("category")
+                                    .includes(category.id)
+                                : false
+                            }
                             value={category.id}
                             onClick={handleCatSearch}
                           />
@@ -147,6 +165,11 @@ const Shop = () => {
                       return (
                         <li className="mb-2" key={brand.id}>
                           <input
+                            defaultChecked={
+                              searchParams.get("brand")
+                                ? searchParams.get("brand").includes(brand.id)
+                                : false
+                            }
                             type="checkbox"
                             value={brand.id}
                             onClick={handleBrandSearch}
