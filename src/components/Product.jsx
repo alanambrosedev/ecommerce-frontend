@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "./common/Layout";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Thumbs, FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -13,11 +13,32 @@ import ProductImgThree from "../assets/images/mens/twelve.jpg";
 import { Rating } from "react-simple-star-rating";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import { adminToken, apiUrl } from "./common/Http";
 
 const Product = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [rating, setRating] = useState(4);
+  const [product, setProduct] = useState([]);
+  const params = useParams();
 
+  const fetchProduct = async () => {
+    const res = await fetch(`${apiUrl}get-product/${params.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch product.");
+    }
+    const result = await res.json();
+    setProduct(result.data);
+  };
+  useEffect(() => {
+    fetchProduct();
+  }, []);
   return (
     <Layout>
       <div className="container product-detail">
@@ -32,7 +53,7 @@ const Product = () => {
                   <Link to="/shop">Shop</Link>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                  <Link to="">Dummy Product</Link>
+                  <Link to="">{product.title}</Link>
                 </li>
               </ol>
             </nav>
@@ -123,20 +144,20 @@ const Product = () => {
             </div>
           </div>
           <div className="col-md-7">
-            <h2>Dummy Product Title</h2>
+            <h2>{product.title}</h2>
             <div className="d-flex">
               <Rating size={20} readonly initialValue={rating} />
               <span className="pt-1 ps-2">1022 reviews</span>
             </div>
             <div className="price h3 py-3">
-              $20 <span className="text-decoration-line-through">$180</span>
+              ${product.price} &nbsp;
+              {product.compare_price && (
+                <span className="text-decoration-line-through">
+                  ${product.compare_price}
+                </span>
+              )}
             </div>
-            <div>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. <br />
-              Alias esse voluptatem officia temporibus quod expedita! Recusandae
-              <br />
-              odio voluptas laboriosam dignissimos!
-            </div>
+            <div>{product.short_description}</div>
             <div className="pt-3">
               <strong>Select Size</strong>
               <div className="sizes p-2">
@@ -152,7 +173,7 @@ const Product = () => {
               <hr />
               <div>
                 <strong>SKU:</strong>
-                765768678769
+                {product.sku}
               </div>
             </div>
           </div>
