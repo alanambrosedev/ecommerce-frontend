@@ -19,6 +19,9 @@ const Product = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [rating, setRating] = useState(4);
   const [product, setProduct] = useState([]);
+  const [productImages, setProductImages] = useState([]);
+  const [productSizes, setProductSizes] = useState([]);
+
   const params = useParams();
 
   const fetchProduct = async () => {
@@ -35,6 +38,8 @@ const Product = () => {
     }
     const result = await res.json();
     setProduct(result.data);
+    setProductImages(result.data.product_images);
+    setProductSizes(result.data.product_sizes);
   };
   useEffect(() => {
     fetchProduct();
@@ -78,36 +83,21 @@ const Product = () => {
                   modules={[FreeMode, Navigation, Thumbs]}
                   className="mySwiper mt-2"
                 >
-                  <SwiperSlide>
-                    <div className="content">
-                      <img
-                        src={ProductImgOne}
-                        alt=""
-                        height={100}
-                        className="w-100"
-                      />
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="content">
-                      <img
-                        src={ProductImgTwo}
-                        alt=""
-                        height={100}
-                        className="w-100"
-                      />
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="content">
-                      <img
-                        src={ProductImgThree}
-                        alt=""
-                        height={100}
-                        className="w-100"
-                      />
-                    </div>
-                  </SwiperSlide>
+                  {productImages &&
+                    productImages.map((image) => {
+                      return (
+                        <SwiperSlide>
+                          <div className="content">
+                            <img
+                              src={image.image_url}
+                              alt=""
+                              height={100}
+                              className="w-100"
+                            />
+                          </div>
+                        </SwiperSlide>
+                      );
+                    })}
                 </Swiper>
               </div>
 
@@ -124,21 +114,20 @@ const Product = () => {
                   modules={[FreeMode, Navigation, Thumbs]}
                   className="mySwiper2"
                 >
-                  <SwiperSlide>
-                    <div className="content">
-                      <img src={ProductImgOne} alt="" className="w-100" />
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="content">
-                      <img src={ProductImgTwo} alt="" className="w-100" />
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="content">
-                      <img src={ProductImgThree} alt="" className="w-100" />
-                    </div>
-                  </SwiperSlide>
+                  {productImages &&
+                    productImages.map((image) => {
+                      return (
+                        <SwiperSlide>
+                          <div className="content">
+                            <img
+                              src={image.image_url}
+                              alt=""
+                              className="w-100"
+                            />
+                          </div>
+                        </SwiperSlide>
+                      );
+                    })}
                 </Swiper>
               </div>
             </div>
@@ -161,9 +150,14 @@ const Product = () => {
             <div className="pt-3">
               <strong>Select Size</strong>
               <div className="sizes p-2">
-                <button className="btn btn-size my-1">S</button>
-                <button className="btn btn-size ms-1">M</button>
-                <button className="btn btn-size ms-1">L</button>
+                {productSizes &&
+                  productSizes.map((sizes) => {
+                    return (
+                      <button className="btn btn-size my-1 me-2">
+                        {sizes.size.name}
+                      </button>
+                    );
+                  })}
               </div>
               <div className="add-to-cart mt-4">
                 <button className="btn btn-primary text-uppercase">
@@ -181,12 +175,14 @@ const Product = () => {
         <div className="row pb-6">
           <div className="col-md-12">
             <Tabs
-              defaultActiveKey="profile"
+              defaultActiveKey="Description"
               id="uncontrolled-tab-example"
               className="mb-3"
             >
-              <Tab eventKey="home" title="Description">
-                Description
+              <Tab eventKey="Description" title="Description">
+                <div
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
               </Tab>
               <Tab eventKey="profile" title="Reviews (11)">
                 Reviews Area
