@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductImg from "../../assets/images/mens/ten.jpg";
 import { adminToken, apiUrl } from "../common/Http";
+import { Link } from "react-router-dom";
 
 const FeaturedProducts = () => {
   const [featuredProduct, setFeaturedProduct] = useState([]);
@@ -40,7 +41,7 @@ const FeaturedProducts = () => {
                       <img src={product.image_url} alt="" className="w-100" />
                     </div>
                     <div className="card-body pt-2">
-                      <a href="">{product.title}</a>
+                      <Link to={`product/${product.id}`}>{product.title}</Link>
                       <div className="price">
                         ${product.price} &nbsp;
                         {product.compare_price && (

@@ -2,7 +2,6 @@ import React from "react";
 import Layout from "../../common/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../../common/Sidebar";
-import { register } from "swiper/element";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { adminToken, apiUrl } from "../../common/Http";

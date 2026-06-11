@@ -50,14 +50,14 @@ const Product = () => {
         <div className="row">
           <div className="col-md-12">
             <nav aria-label="breadcrumb" className="py-4">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
                   <Link to="/">Home</Link>
                 </li>
-                <li class="breadcrumb-item" aria-current="page">
+                <li className="breadcrumb-item" aria-current="page">
                   <Link to="/shop">Shop</Link>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
+                <li className="breadcrumb-item active" aria-current="page">
                   <Link to="">{product.title}</Link>
                 </li>
               </ol>
@@ -68,25 +68,25 @@ const Product = () => {
           <div className="col-md-5">
             <div className="row">
               <div className="col-2">
-                <Swiper
-                  style={{
-                    "--swiper-navigation-color": "#000",
-                    "--swiper-pagination-color": "#000",
-                  }}
-                  onSwiper={setThumbsSwiper}
-                  loop={true}
-                  direction={`vertical`}
-                  spaceBetween={10}
-                  slidesPerView={6}
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper mt-2"
-                >
-                  {productImages &&
-                    productImages.map((image) => {
+                {productImages && productImages.length > 0 && (
+                  <Swiper
+                    style={{
+                      "--swiper-navigation-color": "#000",
+                      "--swiper-pagination-color": "#000",
+                    }}
+                    onSwiper={setThumbsSwiper}
+                    loop={false}
+                    direction={`vertical`}
+                    spaceBetween={10}
+                    slidesPerView={6}
+                    freeMode={true}
+                    watchSlidesProgress={true}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="mySwiper mt-2"
+                  >
+                    {productImages.map((image) => {
                       return (
-                        <SwiperSlide>
+                        <SwiperSlide key={image.id}>
                           <div className="content">
                             <img
                               src={image.image_url}
@@ -98,26 +98,27 @@ const Product = () => {
                         </SwiperSlide>
                       );
                     })}
-                </Swiper>
+                  </Swiper>
+                )}
               </div>
 
               <div className="col-10">
-                <Swiper
-                  style={{
-                    "--swiper-navigation-color": "#000",
-                    "--swiper-pagination-color": "#000",
-                  }}
-                  loop={true}
-                  spaceBetween={0}
-                  navigation={true}
-                  thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper2"
-                >
-                  {productImages &&
-                    productImages.map((image) => {
+                {productImages && productImages.length > 0 ? (
+                  <Swiper
+                    style={{
+                      "--swiper-navigation-color": "#000",
+                      "--swiper-pagination-color": "#000",
+                    }}
+                    loop={productImages.length > 1}
+                    spaceBetween={0}
+                    navigation={true}
+                    thumbs={thumbsSwiper && !thumbsSwiper.destroyed ? { swiper: thumbsSwiper } : undefined}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="mySwiper2"
+                  >
+                    {productImages.map((image) => {
                       return (
-                        <SwiperSlide>
+                        <SwiperSlide key={image.id}>
                           <div className="content">
                             <img
                               src={image.image_url}
@@ -128,7 +129,12 @@ const Product = () => {
                         </SwiperSlide>
                       );
                     })}
-                </Swiper>
+                  </Swiper>
+                ) : (
+                  <div className="no-image-placeholder text-center p-5 border">
+                    <span>No Image Available</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -151,9 +157,9 @@ const Product = () => {
               <strong>Select Size</strong>
               <div className="sizes p-2">
                 {productSizes &&
-                  productSizes.map((sizes) => {
+                  productSizes.map((sizes, index) => {
                     return (
-                      <button className="btn btn-size my-1 me-2">
+                      <button key={sizes.id || index} className="btn btn-size my-1 me-2">
                         {sizes.size.name}
                       </button>
                     );
