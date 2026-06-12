@@ -112,7 +112,11 @@ const Product = () => {
                     loop={productImages.length > 1}
                     spaceBetween={0}
                     navigation={true}
-                    thumbs={thumbsSwiper && !thumbsSwiper.destroyed ? { swiper: thumbsSwiper } : undefined}
+                    thumbs={
+                      thumbsSwiper && !thumbsSwiper.destroyed
+                        ? { swiper: thumbsSwiper }
+                        : undefined
+                    }
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="mySwiper2"
                   >
@@ -159,7 +163,10 @@ const Product = () => {
                 {productSizes &&
                   productSizes.map((sizes, index) => {
                     return (
-                      <button key={sizes.id || index} className="btn btn-size my-1 me-2">
+                      <button
+                        key={sizes.id || index}
+                        className="btn btn-size my-1 me-2"
+                      >
                         {sizes.size.name}
                       </button>
                     );
