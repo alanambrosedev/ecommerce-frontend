@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "./common/Layout";
 import { Link, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,6 +14,8 @@ import { Rating } from "react-simple-star-rating";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { adminToken, apiUrl } from "./common/Http";
+import { CartContext } from "./context/Cart";
+import { toast } from "react-toastify";
 
 const Product = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -21,6 +23,8 @@ const Product = () => {
   const [product, setProduct] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const [productSizes, setProductSizes] = useState([]);
+  const [sizeSelected, setSizeSelected] = useState(null);
+  const { addToCart } = useContext(CartContext);
 
   const params = useParams();
 
@@ -40,6 +44,17 @@ const Product = () => {
     setProduct(result.data);
     setProductImages(result.data.product_images);
     setProductSizes(result.data.product_sizes);
+  };
+  const handleAddToCart = () => {
+    if (productSizes.length > 0) {
+      if (sizeSelected == null) {
+        toast.error("Please select a size");
+      } else {
+        addToCart(product, sizeSelected);
+      }
+    } else {
+      addToCart(product, null);
+    }
   };
   useEffect(() => {
     fetchProduct();
@@ -164,6 +179,7 @@ const Product = () => {
                   productSizes.map((sizes, index) => {
                     return (
                       <button
+                        onClick={() => setSizeSelected(sizes.size_id)}
                         key={sizes.id || index}
                         className="btn btn-size my-1 me-2"
                       >
@@ -173,7 +189,10 @@ const Product = () => {
                   })}
               </div>
               <div className="add-to-cart mt-4">
-                <button className="btn btn-primary text-uppercase">
+                <button
+                  onClick={() => handleAddToCart()}
+                  className="btn btn-primary text-uppercase"
+                >
                   Add to cart
                 </button>
               </div>
