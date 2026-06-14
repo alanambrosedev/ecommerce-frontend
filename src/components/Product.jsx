@@ -51,9 +51,11 @@ const Product = () => {
         toast.error("Please select a size");
       } else {
         addToCart(product, sizeSelected);
+        toast.success("Product added to cart");
       }
     } else {
       addToCart(product, null);
+      toast.success("Product added to cart");
     }
   };
   useEffect(() => {

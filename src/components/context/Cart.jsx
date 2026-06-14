@@ -3,15 +3,38 @@ import { createContext, useState } from "react";
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartData, setCartData] = useState(
-    JSON.parse(localStorage.getItem("cart")) || [],
-  );
+  const [cartData, setCartData] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("cart"));
+      return Array.isArray(saved)
+        ? saved.filter((item) => item && item.product_id)
+        : [];
+    } catch {
+      return [];
+    }
+  });
+
   const addToCart = (product, size = null) => {
     let updateCart = [...cartData];
 
-    if (cartData.length == 0) {
+    updateCart = updateCart.filter((item) => item && item.product_id);
+
+    const exists = updateCart.find(
+      (item) => item.product_id === product.id && item.size === size,
+    );
+
+    if (exists) {
+      updateCart = updateCart.map((item) =>
+        item.product_id === product.id && item.size === size
+          ? { ...item, qty: item.qty + 1 }
+          : item,
+      );
+    } else {
       updateCart.push({
-        id: `${product.id}-${size}-${Date.now()}`,
+        id:
+          size !== null
+            ? `${product.id}-${size}-${Date.now()}`
+            : `${product.id}-${Date.now()}`,
         product_id: product.id,
         size: size,
         title: product.title,
