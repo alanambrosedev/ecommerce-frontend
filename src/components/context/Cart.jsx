@@ -47,9 +47,26 @@ export const CartProvider = ({ children }) => {
     setCartData(updateCart);
     localStorage.setItem("cart", JSON.stringify(updateCart));
   };
+  const shipping = () => {
+    return 0;
+  };
+
+  const subTotal = () => {
+    let subtotal = 0;
+    cartData.map((item) => {
+      subtotal += item.qty * item.price;
+    });
+    return subtotal;
+  };
+
+  const grandTotal = () => {
+    return subTotal() + shipping();
+  };
 
   return (
-    <CartContext.Provider value={{ cartData, addToCart }}>
+    <CartContext.Provider
+      value={{ cartData, addToCart, subTotal, grandTotal, shipping }}
+    >
       {children}
     </CartContext.Provider>
   );
