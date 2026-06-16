@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Layout from "./common/Layout";
 import { Link } from "react-router-dom";
 import ProductImgOne from "../assets/images/mens/six.jpg";
@@ -6,6 +6,11 @@ import { CartContext } from "./context/Cart";
 
 const Cart = () => {
   const { cartData, subTotal, grandTotal, shipping } = useContext(CartContext);
+  const [qty, setQty] = useState({});
+  const handleQty = (e, itemId) => {
+    const newQty = e.target.value;
+    setQty((prev) => ({ ...prev, [itemId]: newQty }));
+  };
   return (
     <Layout>
       <div className="container">
@@ -50,8 +55,10 @@ const Cart = () => {
                           style={{ width: "100px" }}
                           className="form-control"
                           type="number"
-                          readOnly
-                          value={item.qty}
+                          value={qty[item.id] ?? item.qty}
+                          min={1}
+                          max={10}
+                          onChange={(e) => handleQty(e, item.id)}
                         />
                       </td>
                       <td valign="middle" width={100}>
