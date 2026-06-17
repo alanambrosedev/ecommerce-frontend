@@ -5,11 +5,13 @@ import ProductImgOne from "../assets/images/mens/six.jpg";
 import { CartContext } from "./context/Cart";
 
 const Cart = () => {
-  const { cartData, subTotal, grandTotal, shipping } = useContext(CartContext);
+  const { cartData, subTotal, grandTotal, shipping, updateCartItem } =
+    useContext(CartContext);
   const [qty, setQty] = useState({});
   const handleQty = (e, itemId) => {
     const newQty = e.target.value;
     setQty((prev) => ({ ...prev, [itemId]: newQty }));
+    updateCartItem(itemId, newQty);
   };
   return (
     <Layout>
