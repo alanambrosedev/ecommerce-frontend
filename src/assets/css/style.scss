@@ -83,6 +83,24 @@ ul {
     width: 450px;
 }
 
+.cart-bucket {
+    position: relative;
+}
+
+.cart-bucket span {
+    position: absolute;
+    background-color: #F97316;
+    color: #FFF;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    top: -5px;
+    right: -13px;
+    font-size: 12px;
+    text-align: center;
+}
+
 .nav-tabs {
     .nav-link {
         color: $primary-black;
