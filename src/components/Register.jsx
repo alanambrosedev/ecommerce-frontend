@@ -3,43 +3,37 @@ import Layout from "./common/Layout";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { apiUrl } from "./common/Http";
+import { adminToken, apiUrl } from "./common/Http";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    try {
-      const res = await fetch(`${apiUrl}admin/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+    const res = await fetch(`${apiUrl}register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (res.ok && res.status === 201) {
+      toast.success(result.message);
+      navigate("/account/login");
+    } else {
+      const formErrors = result.errors;
+      Object.keys(formErrors).forEach((field) => {
+        setError(field, { message: formErrors[field][0] });
       });
-
-      const result = await res.json();
-
-      if (res.ok && result.status === 200) {
-        const adminInfo = {
-          token: result.token,
-          id: result.id,
-          name: result.name,
-        };
-        // ✅ store directly
-        localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
-        navigate("/admin/dashboard");
-      } else {
-        toast.error(result.message || "Invalid credentials.");
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
     }
   };
   return (
@@ -61,8 +55,8 @@ const Register = () => {
                     className={`form-control ${errors.name ? "is-invalid" : ""}`}
                     placeholder="Enter your name"
                   />
-                  {errors.email && (
-                    <p className="invalid-feedback">{errors.email.message}</p>
+                  {errors.name && (
+                    <p className="invalid-feedback">{errors.name.message}</p>
                   )}
                 </div>
                 <div className="mb-3">
@@ -108,7 +102,7 @@ const Register = () => {
                 </button>
                 <div className="d-flex justify-content-center pt-4 pb-2">
                   Already have an account? &nbsp;
-                  <a href="/admin/login">Login</a>
+                  <a href="/account/login">Login</a>
                 </div>
               </div>
             </div>
