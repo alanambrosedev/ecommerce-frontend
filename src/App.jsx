@@ -5,6 +5,7 @@ import Product from "./components/Product";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import Login from "./components/admin/Login";
+import { default as CustomerLogin } from "./components/Login";
 import Dashboard from "./components/admin/Dashboard";
 import { ToastContainer } from "react-toastify";
 import { AdminAuthRequire } from "./components/admin/AdminAuthRequire";
@@ -30,6 +31,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/account/register" element={<Register />} />
+          <Route path="/account/login" element={<CustomerLogin />} />
           <Route path="/admin/login" element={<Login />} />
           <Route
             path="/admin/dashboard"

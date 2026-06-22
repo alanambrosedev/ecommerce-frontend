@@ -1,22 +1,17 @@
 import React from "react";
-import Layout from "./common/Layout";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { adminToken, apiUrl } from "./common/Http";
+import Layout from "./common/Layout";
 
-const Register = () => {
+const Login = () => {
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm();
-
-  const navigate = useNavigate();
-
   const onSubmit = async (data) => {
-    const res = await fetch(`${apiUrl}register`, {
+    const res = await fetch(`${apiUrl}authenticate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,6 +31,7 @@ const Register = () => {
       });
     }
   };
+  const navigate = useNavigate();
   return (
     <Layout>
       <div className="container">
@@ -43,22 +39,8 @@ const Register = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="card shadow border-0 login">
               <div className="card-body p-4">
-                <h3 className="border-bottom pb-2 mb-3">Register</h3>
+                <h3 className="border-bottom pb-2 mb-3">Login</h3>
 
-                <div className="mb-3">
-                  <label className="form-label">Name</label>
-                  <input
-                    {...register("name", {
-                      required: "The name field is required.",
-                    })}
-                    type="text"
-                    className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                    placeholder="Enter your name"
-                  />
-                  {errors.name && (
-                    <p className="invalid-feedback">{errors.name.message}</p>
-                  )}
-                </div>
                 <div className="mb-3">
                   <label className="form-label">Email</label>
                   <input
@@ -98,11 +80,11 @@ const Register = () => {
                 </div>
 
                 <button className="btn btn-secondary w-100" type="submit">
-                  Register
+                  Login
                 </button>
                 <div className="d-flex justify-content-center pt-4 pb-2">
-                  Already have an account? &nbsp;
-                  <Link to="/account/login">Login</Link>
+                  Don't have an account? &nbsp;
+                  <Link to="/account/register">Register</Link>
                 </div>
               </div>
             </div>
@@ -113,4 +95,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
