@@ -2,6 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "./common/Layout";
+import { apiUrl } from "./common/Http";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const {
@@ -10,28 +12,36 @@ const Login = () => {
     setError,
     formState: { errors },
   } = useForm();
+
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
-    const res = await fetch(`${apiUrl}authenticate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${adminToken()}`,
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (res.ok && res.status === 201) {
-      toast.success(result.message);
-      navigate("/account/login");
-    } else {
-      const formErrors = result.errors;
-      Object.keys(formErrors).forEach((field) => {
-        setError(field, { message: formErrors[field][0] });
+    try {
+      const res = await fetch(`${apiUrl}authenticate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+
+      const result = await res.json();
+
+      if (res.ok && result.status === 200) {
+        const loginInfo = {
+          token: result.token,
+          id: result.id,
+          name: result.name,
+        };
+        localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+        // navigate("/admin/dashboard");
+      } else {
+        toast.error(result.message || "Invalid credentials.");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
     }
   };
-  const navigate = useNavigate();
   return (
     <Layout>
       <div className="container">

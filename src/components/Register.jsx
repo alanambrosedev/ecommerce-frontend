@@ -21,7 +21,6 @@ const Register = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${adminToken()}`,
       },
       body: JSON.stringify(data),
     });
