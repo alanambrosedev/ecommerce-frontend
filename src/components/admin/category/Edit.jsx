@@ -92,9 +92,8 @@ const Edit = () => {
                         required: "The name field is required.",
                       })}
                       type="name"
-                      className={`form-control ${
-                        errors.name ? "is-invalid" : ""
-                      }`}
+                      className={`form-control ${errors.name ? "is-invalid" : ""
+                        }`}
                       type="text"
                       className={`form-control ${errors.name ? "is-invalid" : ""}`}
                       placeholder="Enter Category name"
@@ -114,9 +113,8 @@ const Edit = () => {
                       {...register("status", {
                         required: "The status field is required.",
                       })}
-                      className={`form-control ${
-                        errors.status ? "is-invalid" : ""
-                      }`}
+                      className={`form-control ${errors.status ? "is-invalid" : ""
+                        }`}
                     >
                       <option value="">Select a Status</option>
                       <option value="1">Active</option>

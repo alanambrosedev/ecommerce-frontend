@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import Layout from "../common/Layout";
 import { useForm } from "react-hook-form";
 import { apiUrl } from "../common/Http";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { AdminAuthContext } from "../context/AdminAuth";
 
 const Login = () => {
   const {
@@ -11,6 +12,8 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const { login } = useContext(AdminAuthContext);
 
   const navigate = useNavigate();
 
@@ -32,8 +35,7 @@ const Login = () => {
           id: result.id,
           name: result.name,
         };
-        // ✅ store directly
-        localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+        login(adminInfo);
         navigate("/admin/dashboard");
       } else {
         toast.error(result.message || "Invalid credentials.");

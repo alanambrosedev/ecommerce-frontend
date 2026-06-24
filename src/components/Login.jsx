@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "./common/Layout";
 import { apiUrl } from "./common/Http";
 import { toast } from "react-toastify";
+import { AuthContext } from "./context/Auth";
 
 const Login = () => {
   const {
@@ -13,6 +14,7 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -33,8 +35,8 @@ const Login = () => {
           id: result.id,
           name: result.name,
         };
-        localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
-        // navigate("/admin/dashboard");
+        login(loginInfo);
+        navigate("/account/dashboard");
       } else {
         toast.error(result.message || "Invalid credentials.");
       }
