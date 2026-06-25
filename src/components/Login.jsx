@@ -36,7 +36,7 @@ const Login = () => {
           name: result.name,
         };
         login(loginInfo);
-        navigate("/account/dashboard");
+        navigate("/account");
       } else {
         toast.error(result.message || "Invalid credentials.");
       }
