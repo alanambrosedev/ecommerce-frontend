@@ -20,6 +20,7 @@ import { default as ProductCreate } from "./components/admin/product/Create";
 import { default as ProductEdit } from "./components/admin/product/Edit";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
+import { RequireAuth } from "./components/RequireAuth";
 
 function App() {
   return (
@@ -32,7 +33,15 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/account/register" element={<Register />} />
-          <Route path="/account" element={<Profile />} />
+
+          <Route
+            path="/account"
+            element={
+              <RequireAuth>
+                <Profile />
+              </RequireAuth>
+            }
+          />
           <Route path="/account/login" element={<CustomerLogin />} />
           <Route path="/admin/login" element={<Login />} />
           <Route
