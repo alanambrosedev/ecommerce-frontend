@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Layout from "./common/Layout";
 import { Link } from "react-router-dom";
 import ProductImgOne from "../assets/images/mens/six.jpg";
+import { CartContext } from "./context/Cart";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const { cartData } = useContext(CartContext);
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
   };
@@ -104,21 +106,30 @@ const Checkout = () => {
             </h3>
             <table className="table">
               <tbody>
-                <tr>
-                  <td width={100}>
-                    <img src={ProductImgOne} width={80} alt="Product" />
-                  </td>
-                  <td width={600}>
-                    <h4>Dummy Product</h4>
-                    <div className="d-flex align-items-center py-2">
-                      <span>$10</span>
-                      <div className="ps-3">
-                        <button className="btn btn-size my-1">S</button>
-                      </div>
-                      <div className="ps-5">X 1</div>
-                    </div>
-                  </td>
-                </tr>
+                {cartData &&
+                  cartData.map((item) => {
+                    return (
+                      <tr>
+                        <td width={100}>
+                          <img src={item.image_url} width={80} alt="Product" />
+                        </td>
+                        <td width={600}>
+                          <h4>{item.title}</h4>
+                          <div className="d-flex align-items-center py-2">
+                            <span>{item.price}</span>
+                            <div className="ps-3">
+                              {item.size && (
+                                <button className="btn btn-size my-1">
+                                  {item.size}
+                                </button>
+                              )}
+                            </div>
+                            <div className="ps-5">X {item.qty}</div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
             <div className="row">
