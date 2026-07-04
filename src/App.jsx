@@ -31,7 +31,6 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
           <Route path="/account/register" element={<Register />} />
 
           <Route
@@ -39,6 +38,14 @@ function App() {
             element={
               <RequireAuth>
                 <Profile />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <RequireAuth>
+                <Checkout />
               </RequireAuth>
             }
           />
