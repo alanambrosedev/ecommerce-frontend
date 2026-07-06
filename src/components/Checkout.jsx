@@ -1,12 +1,44 @@
 import React, { useContext, useState } from "react";
 import Layout from "./common/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProductImgOne from "../assets/images/mens/six.jpg";
 import { CartContext } from "./context/Cart";
+import { useForm } from "react-hook-form";
+import { adminToken, apiUrl } from "./common/Http";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const { cartData } = useContext(CartContext);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    const res = await fetch(`${apiUrl}save-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (res.ok && res.status == 201) {
+      toast.success(result.message);
+      navigate("/admin/products");
+    } else {
+      const formErrors = result.errors;
+      Object.keys(formErrors).forEach((field) => {
+        setError(field, { message: formErrors[field][0] });
+      });
+    }
+  };
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
   };
@@ -27,7 +59,7 @@ const Checkout = () => {
             </nav>
           </div>
         </div>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="row">
             <div className="col-md-7">
               <h3 className="border-bottom pb-3">
