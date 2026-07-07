@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Layout from "./common/Layout";
-import { Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import ProductImgOne from "../assets/images/mens/six.jpg";
 import { CartContext } from "./context/Cart";
 import { useForm } from "react-hook-form";
@@ -19,25 +19,26 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    const res = await fetch(`${apiUrl}save-order`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${adminToken()}`,
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (res.ok && res.status == 201) {
-      toast.success(result.message);
-      navigate("/admin/products");
-    } else {
-      const formErrors = result.errors;
-      Object.keys(formErrors).forEach((field) => {
-        setError(field, { message: formErrors[field][0] });
-      });
-    }
+    console.log(data);
+    // const res = await fetch(`${apiUrl}save-order`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //     Authorization: `Bearer ${adminToken()}`,
+    //   },
+    //   body: JSON.stringify(data),
+    // });
+    // const result = await res.json();
+    // if (res.ok && res.status == 201) {
+    //   toast.success(result.message);
+    //   navigate("/admin/products");
+    // } else {
+    //   const formErrors = result.errors;
+    //   Object.keys(formErrors).forEach((field) => {
+    //     setError(field, { message: formErrors[field][0] });
+    //   });
+    // }
   };
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
@@ -48,11 +49,11 @@ const Checkout = () => {
         <div className="row">
           <div className="col-md-12">
             <nav aria-label="breadcrumb" className="py-4">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
                   <Link to="/">Home</Link>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
+                <li className="breadcrumb-item active" aria-current="page">
                   <Link to="">Checkout</Link>
                 </li>
               </ol>
@@ -71,63 +72,111 @@ const Checkout = () => {
                   <div>
                     <input
                       type="text"
+                      {...register("name", {
+                        required: "The name field is required.",
+                      })}
                       placeholder="Name"
-                      className="form-control"
+                      className={`form-control ${errors.name ? "is-invalid" : ""}`}
                     />
+                    {errors.name && (
+                      <p className="invalid-feedback">{errors.name.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
                     <input
                       type="text"
+                      {...register("email", {
+                        required: "The email field is required.",
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: "Invalid email address",
+                        },
+                      })}
                       placeholder="Email"
-                      className="form-control"
+                      className={`form-control ${errors.email ? "is-invalid" : ""}`}
                     />
+                    {errors.email && (
+                      <p className="invalid-feedback">{errors.email.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="mb-3">
                   <textarea
                     type="textarea"
+                    {...register("address", {
+                      required: "The address field is required.",
+                    })}
                     className="form-control"
                     rows={3}
                     placeholder="Address"
-                    id=""
+                    className={`form-control ${errors.address ? "is-invalid" : ""}`}
                   />
+                  {errors.address && (
+                    <p className="invalid-feedback">{errors.address.message}</p>
+                  )}
                 </div>
                 <div className="col-md-6">
                   <div>
                     <input
+                      {...register("city", {
+                        required: "The city field is required.",
+                      })}
                       type="text"
                       placeholder="City"
-                      className="form-control"
+                      className={`form-control ${errors.city ? "is-invalid" : ""}`}
                     />
+                    {errors.city && (
+                      <p className="invalid-feedback">{errors.city.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
                     <input
+                      {...register("state", {
+                        required: "The state is required.",
+                      })}
                       type="text"
                       placeholder="State"
-                      className="form-control"
+                      className={`form-control ${errors.state ? "is-invalid" : ""}`}
                     />
+                    {errors.state && (
+                      <p className="invalid-feedback">{errors.state.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div>
                     <input
+                      {...register("zip", {
+                        required: "The zip is required.",
+                      })}
                       type="text"
                       placeholder="Zip"
-                      className="form-control"
+                      className={`form-control ${errors.zip ? "is-invalid" : ""}`}
                     />
+                    {errors.zip && (
+                      <p className="invalid-feedback">{errors.zip.message}</p>
+                    )}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
                     <input
+                      {...register("mobile", {
+                        required: "The mobile is required.",
+                      })}
                       type="text"
                       placeholder="Mobile"
-                      className="form-control"
+                      className={`form-control ${errors.mobile ? "is-invalid" : ""}`}
                     />
+                    {errors.mobile && (
+                      <p className="invalid-feedback">
+                        {errors.mobile.message}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -141,7 +190,7 @@ const Checkout = () => {
                   {cartData &&
                     cartData.map((item) => {
                       return (
-                        <tr>
+                        <tr key={item.id}>
                           <td width={100}>
                             <img
                               src={item.image_url}
