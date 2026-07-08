@@ -48,7 +48,7 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(updateCart));
   };
   const shipping = () => {
-    return 0;
+    return 30;
   };
 
   const subTotal = () => {

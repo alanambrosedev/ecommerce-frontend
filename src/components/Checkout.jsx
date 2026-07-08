@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const { cartData } = useContext(CartContext);
+  const { cartData, grandTotal, subTotal, shipping } = useContext(CartContext);
   const {
     register,
     handleSubmit,
@@ -223,19 +223,19 @@ const Checkout = () => {
                     <div>
                       <strong>Sub-Total:</strong>
                     </div>
-                    <div>$2000</div>
+                    <div>${subTotal()}</div>
                   </div>
                   <div className="d-flex justify-content-between border-bottom pb-2">
                     <div>
                       <strong>Shipping:</strong>
                     </div>
-                    <div>$30</div>
+                    <div>${shipping()}</div>
                   </div>
                   <div className="d-flex justify-content-between py-3">
                     <div>
                       <strong>Grand Total:</strong>
                     </div>
-                    <div>$2030</div>
+                    <div>${grandTotal()}</div>
                   </div>
                 </div>
               </div>
