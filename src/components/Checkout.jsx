@@ -16,29 +16,14 @@ const Checkout = () => {
     setError,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
+  const processOrder = (data) => {
+    if (paymentMethod == "cod") {
+      saveOrder(data, "not paid");
+    }
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
-    // const res = await fetch(`${apiUrl}save-order`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json",
-    //     Authorization: `Bearer ${adminToken()}`,
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-    // const result = await res.json();
-    // if (res.ok && res.status == 201) {
-    //   toast.success(result.message);
-    //   navigate("/admin/products");
-    // } else {
-    //   const formErrors = result.errors;
-    //   Object.keys(formErrors).forEach((field) => {
-    //     setError(field, { message: formErrors[field][0] });
-    //   });
-    // }
   };
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
