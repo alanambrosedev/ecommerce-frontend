@@ -4,7 +4,7 @@ import { data, Link, useNavigate } from "react-router-dom";
 import ProductImgOne from "../assets/images/mens/six.jpg";
 import { CartContext } from "./context/Cart";
 import { useForm } from "react-hook-form";
-import { adminToken, apiUrl } from "./common/Http";
+import { adminToken, apiUrl, userToken } from "./common/Http";
 import { toast } from "react-toastify";
 
 const Checkout = () => {
@@ -13,17 +13,36 @@ const Checkout = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm();
   const processOrder = (data) => {
-    if (paymentMethod == "cod") {
+    if (paymentMethod === "cod") {
       saveOrder(data, "not paid");
     }
   };
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const saveOrder = async (data, paymentStatus) => {
+    const formData = {
+      ...data,
+      grand_total: grandTotal(),
+      sub_total: subTotal(),
+      discount: 0,
+      shipping: shipping(),
+      payment_status: paymentStatus,
+      status: "pending",
+      cart: cartData,
+    };
+    const res = await fetch(`${apiUrl}save-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${userToken()}`,
+      },
+      body: JSON.stringify(formData),
+    });
+    const result = await res.json();
+    console.log(result);
   };
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
@@ -45,7 +64,7 @@ const Checkout = () => {
             </nav>
           </div>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(processOrder)}>
           <div className="row">
             <div className="col-md-7">
               <h3 className="border-bottom pb-3">
