@@ -21,6 +21,7 @@ import { default as ProductEdit } from "./components/admin/product/Edit";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
 import { RequireAuth } from "./components/RequireAuth";
+import Confirmation from "./components/Confirmation";
 
 function App() {
   return (
@@ -46,6 +47,14 @@ function App() {
             element={
               <RequireAuth>
                 <Checkout />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/order/confirmation/:id"
+            element={
+              <RequireAuth>
+                <Confirmation />
               </RequireAuth>
             }
           />
