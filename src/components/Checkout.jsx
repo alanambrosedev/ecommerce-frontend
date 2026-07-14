@@ -71,7 +71,12 @@ const Checkout = () => {
             </nav>
           </div>
         </div>
-        <form onSubmit={handleSubmit(processOrder)}>
+        <form
+          onSubmit={handleSubmit(processOrder, (errors) => {
+            console.log("Form Validation Errors:", errors);
+            toast.error("Please fill in all required fields correctly.");
+          })}
+        >
           <div className="row">
             <div className="col-md-7">
               <h3 className="border-bottom pb-3">
@@ -115,11 +120,9 @@ const Checkout = () => {
                 </div>
                 <div className="mb-3">
                   <textarea
-                    type="textarea"
                     {...register("address", {
                       required: "The address field is required.",
                     })}
-                    className="form-control"
                     rows={3}
                     placeholder="Address"
                     className={`form-control ${errors.address ? "is-invalid" : ""}`}
@@ -255,20 +258,20 @@ const Checkout = () => {
               </h3>
               <div className="">
                 <input
-                  onClick={handlePaymentMethod}
+                  onChange={handlePaymentMethod}
                   type="radio"
                   value={"stripe"}
-                  defaultChecked={paymentMethod == "stripe"}
+                  checked={paymentMethod === "stripe"}
                   className="ms-2"
                 />
                 <label htmlFor="" className="form-label ps-2">
                   Stripe
                 </label>
                 <input
-                  onClick={handlePaymentMethod}
+                  onChange={handlePaymentMethod}
                   type="radio"
                   value={"cod"}
-                  defaultChecked={paymentMethod == "cod"}
+                  checked={paymentMethod === "cod"}
                   className="ms-2"
                 />
                 <label htmlFor="" className="form-label ps-2">
@@ -276,7 +279,9 @@ const Checkout = () => {
                 </label>
               </div>
               <div className="d-flex pt-4 pb-3">
-                <button className="btn btn-primary">Pay Now</button>
+                <button type="submit" className="btn btn-primary">
+                  Pay Now
+                </button>
               </div>
             </div>
           </div>
