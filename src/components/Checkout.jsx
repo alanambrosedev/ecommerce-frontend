@@ -15,6 +15,8 @@ const Checkout = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+
   const processOrder = (data) => {
     if (paymentMethod === "cod") {
       saveOrder(data, "not paid");
@@ -42,7 +44,12 @@ const Checkout = () => {
       body: JSON.stringify(formData),
     });
     const result = await res.json();
-    console.log(result);
+    if (res.ok && result.status === 201) {
+      localStorage.removeItem("cart");
+      navigate(`/order/confirmation/${result.id}`);
+    } else {
+      toast.error(result.message || "Failed to save order.");
+    }
   };
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
@@ -251,7 +258,7 @@ const Checkout = () => {
                   onClick={handlePaymentMethod}
                   type="radio"
                   value={"stripe"}
-                  checked={paymentMethod == "stripe"}
+                  defaultChecked={paymentMethod == "stripe"}
                   className="ms-2"
                 />
                 <label htmlFor="" className="form-label ps-2">
@@ -261,7 +268,7 @@ const Checkout = () => {
                   onClick={handlePaymentMethod}
                   type="radio"
                   value={"cod"}
-                  checked={paymentMethod == "cod"}
+                  defaultChecked={paymentMethod == "cod"}
                   className="ms-2"
                 />
                 <label htmlFor="" className="form-label ps-2">
