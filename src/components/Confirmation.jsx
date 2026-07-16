@@ -89,7 +89,7 @@ const Confirmation = () => {
               </div>
             </div>
             <div className="text-center">
-              <button className="btn btn-primary">Order Details</button>
+              <button className="btn btn-primary">View Order Details</button>
               <button className="btn btn-outline-secondary ms-2">
                 Continue Shopping
               </button>
