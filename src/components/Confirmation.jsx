@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./common/Sidebar";
 import Layout from "./common/Layout";
+import { apiUrl, userToken } from "./common/Http";
+import { useParams } from "react-router-dom";
 
 const Confirmation = () => {
+  const [order, setOrder] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const params = useParams();
+
+  const fetchOrder = async () => {
+    setLoading(true);
+    const res = await fetch(`${apiUrl}order-details/${params.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${userToken()}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch order.");
+    }
+    setLoading(false);
+    const result = await res.json();
+    setOrder(result.data);
+    console.log(result.data);
+  };
+  useEffect(() => {
+    fetchOrder();
+  }, []);
   return (
     <Layout>
       <div className="container py-5">
