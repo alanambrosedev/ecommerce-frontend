@@ -10,22 +10,25 @@ const Confirmation = () => {
   const params = useParams();
 
   const fetchOrder = async () => {
-    setLoading(true);
-    const res = await fetch(`${apiUrl}order-details/${params.id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch order.");
+    try {
+      setLoading(true);
+      const res = await fetch(`${apiUrl}order-details/${params.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${userToken()}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch order.");
+      }
+      setLoading(false);
+      const result = await res.json();
+      setOrder(result.data);
+    } catch (error) {
+      console.error("Error fetching order:", error);
     }
-    setLoading(false);
-    const result = await res.json();
-    setOrder(result.data);
-    console.log(result.data);
   };
   useEffect(() => {
     fetchOrder();
@@ -47,11 +50,11 @@ const Confirmation = () => {
               <div className="col-6">
                 <p>
                   <strong>Order ID: </strong>
-                  #2323
+                  {order.id}
                 </p>
                 <p>
                   <strong>Date: </strong>
-                  17 March 2026
+                  {order.created_at}
                 </p>
                 <p>
                   <strong>Status: </strong>
