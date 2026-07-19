@@ -66,13 +66,16 @@ const Confirmation = () => {
               </div>
               <div className="col-6">
                 <p>
-                  <strong>Customer: </strong>Alan
+                  <strong>Customer: </strong>
+                  {order.name}
                 </p>
                 <p>
-                  <strong>Address: </strong>Lorem ipsum
+                  <strong>Address: </strong>
+                  {order.address}
                 </p>
                 <p>
-                  <strong>Contact:</strong>9845345745
+                  <strong>Contact:</strong>
+                  {order.mobile}
                 </p>
               </div>
             </div>
