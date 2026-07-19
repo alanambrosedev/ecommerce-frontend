@@ -3,6 +3,7 @@ import Sidebar from "./common/Sidebar";
 import Layout from "./common/Layout";
 import { apiUrl, userToken } from "./common/Http";
 import { useParams } from "react-router-dom";
+import Loader from "./common/Loader";
 
 const Confirmation = () => {
   const [order, setOrder] = useState([]);
@@ -23,9 +24,10 @@ const Confirmation = () => {
       if (!res.ok) {
         throw new Error("Failed to fetch order.");
       }
-      setLoading(false);
+
       const result = await res.json();
       setOrder(result.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching order:", error);
     }
@@ -35,6 +37,8 @@ const Confirmation = () => {
   }, []);
   return (
     <Layout>
+      {loading == true && <Loader />}
+
       <div className="container py-5">
         <div className="row">
           <h1 className="text-center fw-bold text-success">Thank You!</h1>
@@ -58,10 +62,13 @@ const Confirmation = () => {
                 </p>
                 <p>
                   <strong>Status: </strong>
-                  <span className="badge bg-warning">Pending</span>
+                  <span className="badge bg-warning">
+                    {order?.payment_status}
+                  </span>
                 </p>
                 <p>
-                  <strong>Payment Method: </strong>COD
+                  <strong>Payment Method: </strong>
+                  <span className="badge bg-warning">{order?.status}</span>
                 </p>
               </div>
               <div className="col-6">
@@ -90,32 +97,34 @@ const Confirmation = () => {
                       <th>Total</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>Product 1</td>
-                      <td>2</td>
-                      <td>$100</td>
-                      <td>$200</td>
-                    </tr>
+                  <tbody key={order.id}>
+                    {order?.items?.map((item) => (
+                      <tr>
+                        <td>{item.name}</td>
+                        <td>{item.qty}</td>
+                        <td>${item.unit_price}</td>
+                        <td>${item.unit_price * item.qty}</td>
+                      </tr>
+                    ))}
                   </tbody>
                   <tfoot>
                     <tr>
                       <td className="text-end fw-bold" colSpan={3}>
                         Sub Total
                       </td>
-                      <td>$1000</td>
+                      <td>${order?.sub_total}</td>
                     </tr>
                     <tr>
                       <td className="text-end fw-bold" colSpan={3}>
                         Shipping
                       </td>
-                      <td>$12</td>
+                      <td>${order?.shipping}</td>
                     </tr>
                     <tr>
                       <td className="text-end fw-bold" colSpan={3}>
                         Grand Total
                       </td>
-                      <td>$1000</td>
+                      <td>${order?.grand_total}</td>
                     </tr>
                   </tfoot>
                 </table>
