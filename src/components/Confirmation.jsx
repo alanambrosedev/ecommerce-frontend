@@ -32,6 +32,21 @@ const Confirmation = () => {
       console.error("Error fetching order:", error);
     }
   };
+
+  const getStatus = (status) => {
+    switch (status) {
+      case "pending":
+        return "bg-warning";
+      case "delivered":
+        return "bg-success";
+      case "shipped":
+        return "bg-info";
+      case "cancelled":
+        return "bg-danger";
+      default:
+        return "bg-secondary";
+    }
+  };
   useEffect(() => {
     fetchOrder();
   }, []);
@@ -68,7 +83,9 @@ const Confirmation = () => {
                 </p>
                 <p>
                   <strong>Payment Method: </strong>
-                  <span className="badge bg-warning">{order?.status}</span>
+                  <span className={`badge ${getStatus(order?.status)}`}>
+                    {order?.status}
+                  </span>
                 </p>
               </div>
               <div className="col-6">
