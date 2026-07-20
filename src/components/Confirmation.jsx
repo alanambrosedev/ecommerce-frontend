@@ -38,10 +38,12 @@ const Confirmation = () => {
       case "pending":
         return "bg-warning";
       case "delivered":
+      case "paid":
         return "bg-success";
       case "shipped":
         return "bg-info";
       case "cancelled":
+      case "not paid":
         return "bg-danger";
       default:
         return "bg-secondary";
@@ -77,7 +79,7 @@ const Confirmation = () => {
                 </p>
                 <p>
                   <strong>Status: </strong>
-                  <span className="badge bg-warning">
+                  <span className={`badge ${getStatus(order?.payment_status)}`}>
                     {order?.payment_status}
                   </span>
                 </p>
