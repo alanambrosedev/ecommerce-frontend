@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "./common/Sidebar";
 import Layout from "./common/Layout";
 import { apiUrl, userToken } from "./common/Http";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loader from "./common/Loader";
 
 const Confirmation = () => {
@@ -116,9 +116,9 @@ const Confirmation = () => {
                       <th>Total</th>
                     </tr>
                   </thead>
-                  <tbody key={order.id}>
+                  <tbody>
                     {order?.items?.map((item) => (
-                      <tr>
+                      <tr key={item.id}>
                         <td>{item.name}</td>
                         <td>{item.qty}</td>
                         <td>${item.unit_price}</td>
@@ -151,9 +151,9 @@ const Confirmation = () => {
             </div>
             <div className="text-center">
               <button className="btn btn-primary">View Order Details</button>
-              <button className="btn btn-outline-secondary ms-2">
+              <Link to={"/"} className="btn btn-outline-secondary ms-2">
                 Continue Shopping
-              </button>
+              </Link>
             </div>
           </div>
         </div>
