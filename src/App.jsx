@@ -22,6 +22,7 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import { RequireAuth } from "./components/RequireAuth";
 import Confirmation from "./components/Confirmation";
+import ShowOrders from "./components/admin/orders/ShowOrders";
 
 function App() {
   return (
@@ -137,6 +138,14 @@ function App() {
             element={
               <AdminAuthRequire>
                 <ProductEdit />
+              </AdminAuthRequire>
+            }
+          ></Route>
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminAuthRequire>
+                <ShowOrders />
               </AdminAuthRequire>
             }
           ></Route>
