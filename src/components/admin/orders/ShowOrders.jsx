@@ -1,9 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../common/Sidebar";
 import Layout from "../../common/Layout";
 import { Link } from "react-router-dom";
+import { adminToken, apiUrl } from "../../common/Http";
+import { toast } from "react-toastify";
 
 const ShowOrders = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${apiUrl}orders`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch orders.");
+      }
+      const result = await res.json();
+      setLoading(false);
+
+      setOrders(result.data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong.");
+    }
+  };
+  useEffect(() => {
+    fetchOrders();
+  }, []);
   return (
     <Layout>
       <div className="container">
