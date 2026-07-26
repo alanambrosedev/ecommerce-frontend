@@ -70,7 +70,7 @@ const ShowOrders = () => {
                   <NoState text="Orders not found." />
                 )}
                 {loading == false && orders.length > 0 && (
-                  <table className="table table-hover">
+                  <table className="table table-striped">
                     <thead>
                       <tr>
                         <th>ID</th>

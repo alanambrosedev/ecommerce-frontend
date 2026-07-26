@@ -79,7 +79,7 @@ const Show = () => {
                   <NoState text="Brands not found." />
                 )}
                 {brands && brands.length > 0 && (
-                  <table className="table table-hover">
+                  <table className="table table-striped">
                     <thead>
                       <tr>
                         <th width="50">ID</th>
