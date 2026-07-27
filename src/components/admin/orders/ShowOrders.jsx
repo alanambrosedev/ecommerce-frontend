@@ -26,7 +26,6 @@ const ShowOrders = () => {
       }
       const result = await res.json();
       setLoading(false);
-      console.log(result.data);
 
       setOrders(result.data);
     } catch (error) {
@@ -87,7 +86,11 @@ const ShowOrders = () => {
                         orders.map((order) => {
                           return (
                             <tr key={order.id}>
-                              <td className="text-primary">{order.id}</td>
+                              <td>
+                                <Link to={`/admin/orders/${order.id}`}>
+                                  {order.id}
+                                </Link>
+                              </td>
                               <td>{order.name}</td>
                               <td>{order.email}</td>
                               <td>
