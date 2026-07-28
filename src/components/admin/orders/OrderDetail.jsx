@@ -33,7 +33,22 @@ const OrderDetail = () => {
       toast.error("Something went wrong.");
     }
   };
-
+  const getStatus = (status) => {
+    switch (status) {
+      case "pending":
+        return "bg-warning";
+      case "delivered":
+      case "paid":
+        return "bg-success";
+      case "shipped":
+        return "bg-info";
+      case "cancelled":
+      case "not paid":
+        return "bg-danger";
+      default:
+        return "bg-secondary";
+    }
+  };
   useEffect(() => {
     fetchOrderDetails();
   }, []);
@@ -49,8 +64,38 @@ const OrderDetail = () => {
           </div>
           <Sidebar />
           <div className="col-md-9">
-            <div className="card shadow">
-              <div className="card-body p-4"></div>
+            <div className="row">
+              <div className="col-md-9">
+                <div className="card shadow">
+                  <div className="card-body p-4">
+                    <div className="row">
+                      <div className="col-md-4">
+                        <h3 className="fw-bold">Order ID: #{order.id}</h3>
+                        <span className={`badge ${getStatus(order.status)}`}>
+                          {order.status}
+                        </span>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="text-secondary">Date:</div>
+                        <h4 className="pt-2">{order.created_at}</h4>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="text-secondary">Payment Status:</div>
+                        <span
+                          className={`badge ${getStatus(order.payment_status)}`}
+                        >
+                          {order.payment_status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="card shadow">
+                  <div className="card-body p-4"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
