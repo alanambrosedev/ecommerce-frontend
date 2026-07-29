@@ -88,6 +88,24 @@ const OrderDetail = () => {
                         </span>
                       </div>
                     </div>
+                    <div className="row">
+                      <div className="col-md-4">
+                        <div className="py-5">
+                          <strong>{order.name}</strong>
+                          <div>{order.email}</div>
+                          <div>{order.mobile}</div>
+                          <div>
+                            {order.address} {order.city} {order.state}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="text-secondary pt-5">
+                          Payment Method
+                        </div>
+                        <p>COD</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
