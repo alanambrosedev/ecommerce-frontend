@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 const OrderDetail = () => {
   const [order, setOrder] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState([]);
   const params = useParams();
   const fetchOrderDetails = async () => {
     try {
@@ -28,6 +29,7 @@ const OrderDetail = () => {
       console.log(result.data);
 
       setOrder(result.data);
+      setItems(result.data.items);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong.");
@@ -66,7 +68,7 @@ const OrderDetail = () => {
           <div className="col-md-9">
             <div className="row">
               <div className="col-md-9">
-                <div className="card shadow">
+                <div className="card shadow mb-5">
                   <div className="card-body p-4">
                     <div className="row">
                       <div className="col-md-4">
@@ -104,6 +106,62 @@ const OrderDetail = () => {
                           Payment Method
                         </div>
                         <p>COD</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <h3 class="pb-2 ">
+                        <strong>Items</strong>
+                      </h3>
+                      {items.map((item) => {
+                        return (
+                          <div key={item.id} class="row justify-content-end">
+                            <div class="col-lg-12">
+                              <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                <div class="d-flex">
+                                  <img
+                                    width="70"
+                                    class="me-3"
+                                    src="http://localhost:7000/uploads/products/small/1734940173.png"
+                                    alt=""
+                                  />
+                                  <div class="d-flex flex-column">
+                                    <div class="mb-2">
+                                      <span>{item.name}</span>
+                                    </div>
+                                    <div>
+                                      <button class="btn btn-size">
+                                        {item.size}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="d-flex">
+                                  <div>X {item.qty}</div>
+                                  <div class="ps-3">$ {item.price}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <div class="row justify-content-end">
+                        <div class="col-lg-12">
+                          <div class="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                            <div>Subtotal</div>
+                            <div>$ {order.sub_total}</div>
+                          </div>
+                          <div class="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                            <div>Shipping</div>
+                            <div>$ {order.shipping}</div>
+                          </div>
+                          <div class="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                            <div>
+                              <strong>Grand Total</strong>
+                            </div>
+                            <div>$ {order.grand_total}</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
