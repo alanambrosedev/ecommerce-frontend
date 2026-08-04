@@ -4,6 +4,7 @@ import Sidebar from "../../common/Sidebar";
 import { Link, useParams } from "react-router-dom";
 import { adminToken, apiUrl } from "../../common/Http";
 import { toast } from "react-toastify";
+import Loader from "../../common/Loader";
 
 const OrderDetail = () => {
   const [order, setOrder] = useState([]);
@@ -26,7 +27,6 @@ const OrderDetail = () => {
       }
       const result = await res.json();
       setLoading(false);
-      console.log(result.data);
 
       setOrder(result.data);
       setItems(result.data.items);
@@ -70,100 +70,115 @@ const OrderDetail = () => {
               <div className="col-md-9">
                 <div className="card shadow mb-5">
                   <div className="card-body p-4">
-                    <div className="row">
-                      <div className="col-md-4">
-                        <h3 className="fw-bold">Order ID: #{order.id}</h3>
-                        <span className={`badge ${getStatus(order.status)}`}>
-                          {order.status}
-                        </span>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="text-secondary">Date:</div>
-                        <h4 className="pt-2">{order.created_at}</h4>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="text-secondary">Payment Status:</div>
-                        <span
-                          className={`badge ${getStatus(order.payment_status)}`}
-                        >
-                          {order.payment_status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-4">
-                        <div className="py-5">
-                          <strong>{order.name}</strong>
-                          <div>{order.email}</div>
-                          <div>{order.mobile}</div>
-                          <div>
-                            {order.address} {order.city} {order.state}
+                    {loading == true && <Loader />}
+                    {loading == false && (
+                      <div>
+                        <div className="row">
+                          <div className="col-md-4">
+                            <h3 className="fw-bold">Order ID: #{order.id}</h3>
+                            <span
+                              className={`badge ${getStatus(order.status)}`}
+                            >
+                              {order.status}
+                            </span>
+                          </div>
+                          <div className="col-md-4">
+                            <div className="text-secondary">Date:</div>
+                            <h4 className="pt-2">{order.created_at}</h4>
+                          </div>
+                          <div className="col-md-4">
+                            <div className="text-secondary">
+                              Payment Status:
+                            </div>
+                            <span
+                              className={`badge ${getStatus(order.payment_status)}`}
+                            >
+                              {order.payment_status}
+                            </span>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="text-secondary pt-5">
-                          Payment Method
-                        </div>
-                        <p>COD</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <h3 class="pb-2 ">
-                        <strong>Items</strong>
-                      </h3>
-                      {items.map((item) => {
-                        return (
-                          <div key={item.id} class="row justify-content-end">
-                            <div class="col-lg-12">
-                              <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                                <div class="d-flex">
-                                  <img
-                                    width="70"
-                                    class="me-3"
-                                    src="http://localhost:7000/uploads/products/small/1734940173.png"
-                                    alt=""
-                                  />
-                                  <div class="d-flex flex-column">
-                                    <div class="mb-2">
-                                      <span>{item.name}</span>
-                                    </div>
-                                    <div>
-                                      <button class="btn btn-size">
-                                        {item.size}
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="d-flex">
-                                  <div>X {item.qty}</div>
-                                  <div class="ps-3">$ {item.price}</div>
-                                </div>
+                        <div className="row">
+                          <div className="col-md-4">
+                            <div className="py-5">
+                              <strong>{order.name}</strong>
+                              <div>{order.email}</div>
+                              <div>{order.mobile}</div>
+                              <div>
+                                {order.address} {order.city} {order.state}
                               </div>
                             </div>
                           </div>
-                        );
-                      })}
-
-                      <div class="row justify-content-end">
-                        <div class="col-lg-12">
-                          <div class="d-flex  justify-content-between border-bottom pb-2 mb-2">
-                            <div>Subtotal</div>
-                            <div>$ {order.sub_total}</div>
-                          </div>
-                          <div class="d-flex  justify-content-between border-bottom pb-2 mb-2">
-                            <div>Shipping</div>
-                            <div>$ {order.shipping}</div>
-                          </div>
-                          <div class="d-flex  justify-content-between border-bottom pb-2 mb-2">
-                            <div>
-                              <strong>Grand Total</strong>
+                          <div className="col-md-4">
+                            <div className="text-secondary pt-5">
+                              Payment Method
                             </div>
-                            <div>$ {order.grand_total}</div>
+                            <p>COD</p>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <h3 className="pb-2 ">
+                            <strong>Items</strong>
+                          </h3>
+                          {items.map((item) => {
+                            return (
+                              <div
+                                key={item.id}
+                                className="row justify-content-end"
+                              >
+                                <div className="col-lg-12">
+                                  <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                    <div className="d-flex">
+                                      {item.product.image && (
+                                        <img
+                                          width="70"
+                                          className="me-3"
+                                          src={item.product.image_url}
+                                          alt=""
+                                        />
+                                      )}
+
+                                      <div className="d-flex flex-column">
+                                        <div className="mb-2">
+                                          <span>{item.name}</span>
+                                        </div>
+                                        <div>
+                                          <button className="btn btn-size">
+                                            {item.size}
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="d-flex">
+                                      <div>X {item.qty}</div>
+                                      <div className="ps-3">$ {item.price}</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+
+                          <div className="row justify-content-end">
+                            <div className="col-lg-12">
+                              <div className="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                                <div>Subtotal</div>
+                                <div>$ {order.sub_total}</div>
+                              </div>
+                              <div className="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                                <div>Shipping</div>
+                                <div>$ {order.shipping}</div>
+                              </div>
+                              <div className="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                                <div>
+                                  <strong>Grand Total</strong>
+                                </div>
+                                <div>$ {order.grand_total}</div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
