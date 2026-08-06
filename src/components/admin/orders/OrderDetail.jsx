@@ -184,7 +184,30 @@ const OrderDetail = () => {
               </div>
               <div className="col-md-3">
                 <div className="card shadow">
-                  <div className="card-body p-4"></div>
+                  <div className="card-body p-4">
+                    <form action="">
+                      <div className="">
+                        <label htmlFor="status">Status</label>
+                        <select name="" id="status" className="form-control">
+                          <option value="pending">Pending</option>
+                          <option value="pending">Shipping</option>
+                          <option value="pending">Delivered</option>
+                          <option value="pending">Cancelled</option>
+                        </select>
+                      </div>
+                      <div className="">
+                        <label htmlFor="payment-status">Payment Status</label>
+                        <select
+                          name=""
+                          id="payment-status"
+                          className="form-control"
+                        >
+                          <option value="paid">Paid</option>
+                          <option value="not paid">Not paid</option>
+                        </select>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
