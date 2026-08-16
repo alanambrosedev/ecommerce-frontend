@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import Layout from "../../common/Layout";
 import Sidebar from "../../common/Sidebar";
 import { Link, useParams } from "react-router-dom";
@@ -7,10 +7,14 @@ import { toast } from "react-toastify";
 import Loader from "../../common/Loader";
 
 const OrderDetail = () => {
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState({});
   const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [items, setItems] = useState([]);
+  const [status, setStatus] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
   const params = useParams();
+
   const fetchOrderDetails = async () => {
     try {
       setLoading(true);
@@ -27,14 +31,45 @@ const OrderDetail = () => {
       }
       const result = await res.json();
       setLoading(false);
-
       setOrder(result.data);
       setItems(result.data.items);
+      setStatus(result.data.status);
+      setPaymentStatus(result.data.payment_status);
     } catch (error) {
       console.log(error);
+      setLoading(false);
       toast.error("Something went wrong.");
     }
   };
+
+  const handleUpdateOrder = async (e) => {
+    e.preventDefault();
+    try {
+      setUpdating(true);
+      const res = await fetch(`${apiUrl}update-order/${params.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+        body: JSON.stringify({ status, payment_status: paymentStatus }),
+      });
+      const result = await res.json();
+      setUpdating(false);
+      if (res.ok && result.status === 200) {
+        setOrder(result.data);
+        toast.success("Order updated successfully.");
+      } else {
+        toast.error(result.message || "Failed to update order.");
+      }
+    } catch (error) {
+      console.log(error);
+      setUpdating(false);
+      toast.error("Something went wrong.");
+    }
+  };
+
   const getStatus = (status) => {
     switch (status) {
       case "pending":
@@ -51,15 +86,17 @@ const OrderDetail = () => {
         return "bg-secondary";
     }
   };
+
   useEffect(() => {
     fetchOrderDetails();
   }, []);
+
   return (
     <Layout>
       <div className="container">
         <div className="row">
           <div className="d-flex justify-content-between mt-5 pb-3">
-            <h4 className="h4 pb-0 mb-0">Your Title</h4>
+            <h4 className="h4 pb-0 mb-0">Order Detail</h4>
             <Link to="/admin/orders" className="btn btn-primary">
               Back
             </Link>
@@ -70,8 +107,8 @@ const OrderDetail = () => {
               <div className="col-md-9">
                 <div className="card shadow mb-5">
                   <div className="card-body p-4">
-                    {loading == true && <Loader />}
-                    {loading == false && (
+                    {loading === true && <Loader />}
+                    {loading === false && (
                       <div>
                         <div className="row">
                           <div className="col-md-4">
@@ -116,7 +153,7 @@ const OrderDetail = () => {
                           </div>
                         </div>
                         <div className="row">
-                          <h3 className="pb-2 ">
+                          <h3 className="pb-2">
                             <strong>Items</strong>
                           </h3>
                           {items.map((item) => {
@@ -128,7 +165,7 @@ const OrderDetail = () => {
                                 <div className="col-lg-12">
                                   <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
                                     <div className="d-flex">
-                                      {item.product.image && (
+                                      {item.product && item.product.image && (
                                         <img
                                           width="70"
                                           className="me-3"
@@ -136,15 +173,16 @@ const OrderDetail = () => {
                                           alt=""
                                         />
                                       )}
-
                                       <div className="d-flex flex-column">
                                         <div className="mb-2">
                                           <span>{item.name}</span>
                                         </div>
                                         <div>
-                                          <button className="btn btn-size">
-                                            {item.size}
-                                          </button>
+                                          {item.size && (
+                                            <button className="btn btn-size">
+                                              {item.size}
+                                            </button>
+                                          )}
                                         </div>
                                       </div>
                                     </div>
@@ -160,15 +198,15 @@ const OrderDetail = () => {
 
                           <div className="row justify-content-end">
                             <div className="col-lg-12">
-                              <div className="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                              <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
                                 <div>Subtotal</div>
                                 <div>$ {order.sub_total}</div>
                               </div>
-                              <div className="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                              <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
                                 <div>Shipping</div>
                                 <div>$ {order.shipping}</div>
                               </div>
-                              <div className="d-flex  justify-content-between border-bottom pb-2 mb-2">
+                              <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
                                 <div>
                                   <strong>Grand Total</strong>
                                 </div>
@@ -185,27 +223,44 @@ const OrderDetail = () => {
               <div className="col-md-3">
                 <div className="card shadow">
                   <div className="card-body p-4">
-                    <form action="">
-                      <div className="">
-                        <label htmlFor="status">Status</label>
-                        <select name="" id="status" className="form-control">
+                    <form onSubmit={handleUpdateOrder}>
+                      <div className="mb-3">
+                        <label htmlFor="status" className="form-label">
+                          Status
+                        </label>
+                        <select
+                          id="status"
+                          className="form-control"
+                          value={status}
+                          onChange={(e) => setStatus(e.target.value)}
+                        >
                           <option value="pending">Pending</option>
-                          <option value="pending">Shipping</option>
-                          <option value="pending">Delivered</option>
-                          <option value="pending">Cancelled</option>
+                          <option value="shipped">Shipped</option>
+                          <option value="delivered">Delivered</option>
+                          <option value="cancelled">Cancelled</option>
                         </select>
                       </div>
-                      <div className="">
-                        <label htmlFor="payment-status">Payment Status</label>
+                      <div className="mb-3">
+                        <label htmlFor="payment-status" className="form-label">
+                          Payment Status
+                        </label>
                         <select
-                          name=""
                           id="payment-status"
                           className="form-control"
+                          value={paymentStatus}
+                          onChange={(e) => setPaymentStatus(e.target.value)}
                         >
                           <option value="paid">Paid</option>
-                          <option value="not paid">Not paid</option>
+                          <option value="not paid">Not Paid</option>
                         </select>
                       </div>
+                      <button
+                        type="submit"
+                        className="btn btn-primary w-100"
+                        disabled={updating}
+                      >
+                        {updating ? "Updating..." : "Update Order"}
+                      </button>
                     </form>
                   </div>
                 </div>

@@ -57,16 +57,7 @@ const Create = () => {
                     <label htmlFor="" className="form-label">
                       Name
                     </label>
-                    <input
-                      {...register("name", {
-                        required: "The name field is required.",
-                      })}
-                      className={`form-control ${errors.name ? "is-invalid" : ""
-                        }`}
-                      type="text"
-                      className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                      placeholder="Enter Category name"
-                    />
+                    <input {...register("name", { required: "The name field is required." })} type="text" className={`form-control ${errors.name ? "is-invalid" : ""}`} placeholder="Enter Category name" />
                     {errors.name && (
                       <p className="invalid-feedback">{errors.name.message}</p>
                     )}
@@ -75,16 +66,7 @@ const Create = () => {
                     <label htmlFor="" className="form-label">
                       Status
                     </label>
-                    <select
-                      name=""
-                      id=""
-                      className="form-control"
-                      {...register("status", {
-                        required: "The status field is required.",
-                      })}
-                      className={`form-control ${errors.status ? "is-invalid" : ""
-                        }`}
-                    >
+                    <select {...register("status", { required: "The status field is required." })} className={`form-control ${errors.status ? "is-invalid" : ""}`}>
                       <option value="">Select a Status</option>
                       <option value="1">Active</option>
                       <option value="0">Inactive</option>
@@ -107,3 +89,4 @@ const Create = () => {
 };
 
 export default Create;
+

@@ -14,7 +14,7 @@ const Confirmation = () => {
     try {
       setLoading(true);
       const res = await fetch(`${apiUrl}order-details/${params.id}`, {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -163,3 +163,4 @@ const Confirmation = () => {
 };
 
 export default Confirmation;
+

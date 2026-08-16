@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductImg from "../../assets/images/mens/fivee.jpg";
-import { adminToken, apiUrl } from "../common/Http";
+import { apiUrl } from "../common/Http";
 import { Link } from "react-router-dom";
 
 const LatestProducts = () => {
@@ -12,16 +11,15 @@ const LatestProducts = () => {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Bearer ${adminToken()}`,
         },
       });
       if (!response.ok) {
         throw new Error("Failed to fetch products.");
       }
       const result = await response.json();
-      setLatestProduct(result.data);
+      setLatestProduct(result.data || []);
     } catch (error) {
-      console.error("Failed in fetching products.", error);
+      console.error("Failed in fetching latest products.", error);
     }
   };
   useEffect(() => {
@@ -39,11 +37,11 @@ const LatestProducts = () => {
                   <div className="product card border-0">
                     <div className="card-img">
                       <Link to={`/product/${product.id}`}>
-                        <img src={product.image_url} alt="" className="w-100" />
+                        <img src={product.image_url} alt={product.title} className="w-100" />
                       </Link>
                     </div>
                     <div className="card-body pt-2">
-                      <Link to={`product/${product.id}`}>{product.title}</Link>
+                      <Link to={`/product/${product.id}`}>{product.title}</Link>
                       <div className="price">
                         ${product.price} &nbsp;
                         {product.compare_price && (

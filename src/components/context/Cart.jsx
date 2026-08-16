@@ -47,13 +47,14 @@ export const CartProvider = ({ children }) => {
     setCartData(updateCart);
     localStorage.setItem("cart", JSON.stringify(updateCart));
   };
+
   const shipping = () => {
     return 30;
   };
 
   const subTotal = () => {
     let subtotal = 0;
-    cartData.map((item) => {
+    cartData.forEach((item) => {
       subtotal += item.qty * item.price;
     });
     return subtotal;
@@ -74,8 +75,8 @@ export const CartProvider = ({ children }) => {
 
   const getQty = () => {
     let qty = 0;
-    cartData.map((item) => {
-      qty += parseInt(item.qty);
+    cartData.forEach((item) => {
+      qty += parseInt(item.qty || 0);
     });
     return qty;
   };
@@ -86,6 +87,12 @@ export const CartProvider = ({ children }) => {
 
     localStorage.setItem("cart", JSON.stringify(newCartData));
   };
+
+  const clearCart = () => {
+    setCartData([]);
+    localStorage.removeItem("cart");
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -96,6 +103,7 @@ export const CartProvider = ({ children }) => {
         shipping,
         updateCartItem,
         deleteCartItem,
+        clearCart,
         getQty,
       }}
     >

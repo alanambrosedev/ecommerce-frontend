@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const { cartData, grandTotal, subTotal, shipping } = useContext(CartContext);
+  const { cartData, grandTotal, subTotal, shipping, clearCart } = useContext(CartContext);
   const {
     register,
     handleSubmit,
@@ -45,7 +45,7 @@ const Checkout = () => {
     });
     const result = await res.json();
     if (res.ok && result.status === 201) {
-      localStorage.removeItem("cart");
+      clearCart();
       navigate(`/order/confirmation/${result.id}`);
     } else {
       toast.error(result.message || "Failed to save order.");
@@ -292,3 +292,4 @@ const Checkout = () => {
 };
 
 export default Checkout;
+

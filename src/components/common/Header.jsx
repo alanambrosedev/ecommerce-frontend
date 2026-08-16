@@ -3,29 +3,36 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Logo from "../../assets/images/logo.png";
 import { Link } from "react-router-dom";
-import { adminToken, apiUrl } from "./Http";
+import { apiUrl } from "./Http";
 import { CartContext } from "../context/Cart";
+
 const Header = () => {
   const [categories, setCategories] = useState([]);
   const { getQty } = useContext(CartContext);
+
   const fetchCategories = async () => {
-    const res = await fetch(`${apiUrl}categories`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${adminToken()}`,
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch categories");
+    try {
+      const res = await fetch(`${apiUrl}get-categories`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const result = await res.json();
+      setCategories(result.data || []);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
     }
-    const result = await res.json();
-    setCategories(result.data);
   };
+
   useEffect(() => {
     fetchCategories();
   }, []);
+
   return (
     <header className="shadow">
       <div className="bg-dark text-center py-4">
@@ -33,7 +40,7 @@ const Header = () => {
       </div>
       <div className="container">
         <Navbar expand="lg" className="">
-          <Navbar.Brand href="#">
+          <Navbar.Brand as={Link} to="/">
             <img src={Logo} alt="" width={170} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
@@ -42,7 +49,7 @@ const Header = () => {
               {categories &&
                 categories.map((cat) => {
                   return (
-                    <Nav.Link href="#action2" key={cat.id}>
+                    <Nav.Link as={Link} to={`/shop?category=${cat.id}`} key={cat.id}>
                       {cat.name}
                     </Nav.Link>
                   );

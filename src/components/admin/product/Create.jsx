@@ -122,8 +122,8 @@ const Create = ({ placeholder }) => {
       const result = await res.json();
       console.log("Upload response:", result);
       if (result.image && result.image.image_url) {
-        setGallery([...gallery, result.image.id]);
-        setGalleryImages([...galleryImages, result.image.image_url]);
+        setGallery((prev) => [...prev, result.image.id]);
+        setGalleryImages((prev) => [...prev, result.image.image_url]);
         toast.success("Image uploaded successfully");
       } else {
         console.error("Unexpected response structure:", result);
@@ -134,9 +134,11 @@ const Create = ({ placeholder }) => {
       toast.error("Error uploading image");
     }
   };
-  const handleImageDelete = (image) => {
-    const newGallery = galleryImages.filter((gallery) => gallery != image);
-    setGalleryImages(newGallery);
+  const handleImageDelete = (imageUrl) => {
+    const index = galleryImages.indexOf(imageUrl);
+    if (index === -1) return;
+    setGalleryImages((prev) => prev.filter((_, i) => i !== index));
+    setGallery((prev) => prev.filter((_, i) => i !== index));
   };
   useEffect(() => {
     fetchCategories();
