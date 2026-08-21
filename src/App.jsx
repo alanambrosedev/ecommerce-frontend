@@ -19,7 +19,7 @@ import { default as ProductShow } from "./components/admin/product/Show";
 import { default as ProductCreate } from "./components/admin/product/Create";
 import { default as ProductEdit } from "./components/admin/product/Edit";
 import Register from "./components/Register";
-import Profile from "./components/Profile";
+import Profile from "./components/front/Profile";
 import { RequireAuth } from "./components/RequireAuth";
 import Confirmation from "./components/Confirmation";
 import ShowOrders from "./components/admin/orders/ShowOrders";
