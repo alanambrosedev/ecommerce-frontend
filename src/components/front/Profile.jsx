@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Layout from "../common/Layout";
 import UserSidebar from "../common/UserSidebar";
 import { AuthContext } from "../context/Auth";
 
 const Profile = () => {
+  const [profile, setProfile] = useState([]);
   return (
     <Layout>
       <div className="container">
