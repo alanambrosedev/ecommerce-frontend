@@ -15,6 +15,7 @@ const Profile = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues: async () => {
@@ -69,7 +70,10 @@ const Profile = () => {
         toast.success(result.message);
         navigate("/account");
       } else {
-        toast.error(result.message || "Failed to update account.");
+        const formErrors = result.errors;
+        Object.keys(formErrors).forEach((field) => {
+          setError(field, { message: formErrors[field][0] });
+        });
       }
     } catch (error) {
       console.log(error);

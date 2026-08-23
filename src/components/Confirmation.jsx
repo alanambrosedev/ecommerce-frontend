@@ -55,112 +55,114 @@ const Confirmation = () => {
   return (
     <Layout>
       {loading == true && <Loader />}
-
-      <div className="container py-5">
-        <div className="row">
-          <h1 className="text-center fw-bold text-success">Thank You!</h1>
-          <p className="text-muted text-center">
-            Your order is successfully placed.
-          </p>
-        </div>
-        <div className="card shadow">
-          <div className="card-body">
-            <h3 className="fw-bold">Order Summary</h3>
-            <hr />
-            <div className="row">
-              <div className="col-6">
-                <p>
-                  <strong>Order ID: </strong>
-                  {order.id}
-                </p>
-                <p>
-                  <strong>Date: </strong>
-                  {order.created_at}
-                </p>
-                <p>
-                  <strong>Status: </strong>
-                  <span className={`badge ${getStatus(order?.payment_status)}`}>
-                    {order?.payment_status}
-                  </span>
-                </p>
-                <p>
-                  <strong>Payment Method: </strong>
-                  <span className={`badge ${getStatus(order?.status)}`}>
-                    {order?.status}
-                  </span>
-                </p>
+      {loading == false && (
+        <div className="container py-5">
+          <div className="row">
+            <h1 className="text-center fw-bold text-success">Thank You!</h1>
+            <p className="text-muted text-center">
+              Your order is successfully placed.
+            </p>
+          </div>
+          <div className="card shadow">
+            <div className="card-body">
+              <h3 className="fw-bold">Order Summary</h3>
+              <hr />
+              <div className="row">
+                <div className="col-6">
+                  <p>
+                    <strong>Order ID: </strong>
+                    {order.id}
+                  </p>
+                  <p>
+                    <strong>Date: </strong>
+                    {order.created_at}
+                  </p>
+                  <p>
+                    <strong>Status: </strong>
+                    <span
+                      className={`badge ${getStatus(order?.payment_status)}`}
+                    >
+                      {order?.payment_status}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Payment Method: </strong>
+                    <span className={`badge ${getStatus(order?.status)}`}>
+                      {order?.status}
+                    </span>
+                  </p>
+                </div>
+                <div className="col-6">
+                  <p>
+                    <strong>Customer: </strong>
+                    {order.name}
+                  </p>
+                  <p>
+                    <strong>Address: </strong>
+                    {order.address}
+                  </p>
+                  <p>
+                    <strong>Contact:</strong>
+                    {order.mobile}
+                  </p>
+                </div>
               </div>
-              <div className="col-6">
-                <p>
-                  <strong>Customer: </strong>
-                  {order.name}
-                </p>
-                <p>
-                  <strong>Address: </strong>
-                  {order.address}
-                </p>
-                <p>
-                  <strong>Contact:</strong>
-                  {order.mobile}
-                </p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <table className="table-stripped table-bordered table">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Item</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order?.items?.map((item) => (
-                      <tr key={item.id}>
-                        <td>{item.name}</td>
-                        <td>{item.qty}</td>
-                        <td>${item.unit_price}</td>
-                        <td>${item.unit_price * item.qty}</td>
+              <div className="row">
+                <div className="col-12">
+                  <table className="table-stripped table-bordered table">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
                       </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td className="text-end fw-bold" colSpan={3}>
-                        Sub Total
-                      </td>
-                      <td>${order?.sub_total}</td>
-                    </tr>
-                    <tr>
-                      <td className="text-end fw-bold" colSpan={3}>
-                        Shipping
-                      </td>
-                      <td>${order?.shipping}</td>
-                    </tr>
-                    <tr>
-                      <td className="text-end fw-bold" colSpan={3}>
-                        Grand Total
-                      </td>
-                      <td>${order?.grand_total}</td>
-                    </tr>
-                  </tfoot>
-                </table>
+                    </thead>
+                    <tbody>
+                      {order?.items?.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.name}</td>
+                          <td>{item.qty}</td>
+                          <td>${item.unit_price}</td>
+                          <td>${item.unit_price * item.qty}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td className="text-end fw-bold" colSpan={3}>
+                          Sub Total
+                        </td>
+                        <td>${order?.sub_total}</td>
+                      </tr>
+                      <tr>
+                        <td className="text-end fw-bold" colSpan={3}>
+                          Shipping
+                        </td>
+                        <td>${order?.shipping}</td>
+                      </tr>
+                      <tr>
+                        <td className="text-end fw-bold" colSpan={3}>
+                          Grand Total
+                        </td>
+                        <td>${order?.grand_total}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
               </div>
-            </div>
-            <div className="text-center">
-              <button className="btn btn-primary">View Order Details</button>
-              <Link to={"/"} className="btn btn-outline-secondary ms-2">
-                Continue Shopping
-              </Link>
+              <div className="text-center">
+                <button className="btn btn-primary">View Order Details</button>
+                <Link to={"/"} className="btn btn-outline-secondary ms-2">
+                  Continue Shopping
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 };
 
 export default Confirmation;
-
