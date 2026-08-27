@@ -1,8 +1,10 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { apiUrl } from "../common/Http";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const [shippingCharge, setShippingCharge] = useState(0);
   const [cartData, setCartData] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("cart"));
@@ -49,7 +51,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const shipping = () => {
-    return 30;
+    let subtotal = 0;
+    cartData.forEach((item) => {
+      subtotal += item.qty * shippingCharge;
+    });
+    return Number(subtotal) || 0;
   };
 
   const subTotal = () => {
@@ -92,6 +98,28 @@ export const CartProvider = ({ children }) => {
     setCartData([]);
     localStorage.removeItem("cart");
   };
+
+  useEffect(() => {
+    const fetchShipping = async () => {
+      try {
+        const res = await fetch(`${apiUrl}shipping`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+
+        const result = await res.json();
+        if (res.ok && result.status == 200) {
+          setShippingCharge(result.data.shipping_charge);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchShipping();
+  }, []);
 
   return (
     <CartContext.Provider
