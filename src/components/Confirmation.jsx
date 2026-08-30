@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "./common/Sidebar";
 import Layout from "./common/Layout";
 import { apiUrl, userToken } from "./common/Http";
 import { Link, useParams } from "react-router-dom";
@@ -39,12 +38,15 @@ const Confirmation = () => {
         return "bg-warning";
       case "delivered":
       case "paid":
+      case "stripe":
         return "bg-success";
       case "shipped":
         return "bg-info";
       case "cancelled":
       case "not paid":
         return "bg-danger";
+      case "cod":
+        return "bg-primary";
       default:
         return "bg-secondary";
     }
@@ -78,7 +80,13 @@ const Confirmation = () => {
                     {order.created_at}
                   </p>
                   <p>
-                    <strong>Status: </strong>
+                    <strong>Order Status: </strong>
+                    <span className={`badge ${getStatus(order?.status)}`}>
+                      {order?.status}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Payment Status: </strong>
                     <span
                       className={`badge ${getStatus(order?.payment_status)}`}
                     >
@@ -87,8 +95,10 @@ const Confirmation = () => {
                   </p>
                   <p>
                     <strong>Payment Method: </strong>
-                    <span className={`badge ${getStatus(order?.status)}`}>
-                      {order?.status}
+                    <span
+                      className={`badge ${getStatus(order?.payment_method)}`}
+                    >
+                      {order?.payment_method}
                     </span>
                   </p>
                 </div>

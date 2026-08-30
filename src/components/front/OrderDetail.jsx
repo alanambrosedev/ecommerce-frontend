@@ -43,12 +43,15 @@ const OrderDetail = () => {
         return "bg-warning";
       case "delivered":
       case "paid":
+      case "stripe":
         return "bg-success";
       case "shipped":
         return "bg-info";
       case "cancelled":
       case "not paid":
         return "bg-danger";
+      case "cod":
+        return "bg-primary";
       default:
         return "bg-secondary";
     }
@@ -106,7 +109,11 @@ const OrderDetail = () => {
                         <div className="text-secondary pt-5">
                           Payment Method
                         </div>
-                        <p>COD</p>
+                        <p className="pt-1">
+                          <span className={`badge ${getStatus(order?.payment_method)}`}>
+                            {order?.payment_method}
+                          </span>
+                        </p>
                       </div>
                     </div>
                     <div className="row">
