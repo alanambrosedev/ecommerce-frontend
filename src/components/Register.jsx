@@ -10,29 +10,36 @@ const Register = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    const res = await fetch(`${apiUrl}register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (res.ok && res.status === 201) {
-      toast.success(result.message);
-      navigate("/account/login");
-    } else {
-      const formErrors = result.errors;
-      Object.keys(formErrors).forEach((field) => {
-        setError(field, { message: formErrors[field][0] });
+    try {
+      const res = await fetch(`${apiUrl}register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
       });
+      const result = await res.json();
+      if (res.status === 201) {
+        toast.success(result.message);
+        navigate("/account/login");
+        return;
+      }
+      if (res.status === 422 && result.errors) {
+        console.log(result.errors);
+        Object.entries(result.errors).forEach(([field, messages]) => {
+          setError(field, { message: messages[0] });
+        });
+        return;
+      }
+    } catch (err) {
+      toast.error("Network error. Could not connect to the server.");
     }
   };
   return (
@@ -96,8 +103,12 @@ const Register = () => {
                   )}
                 </div>
 
-                <button className="btn btn-secondary w-100" type="submit">
-                  Register
+                <button
+                  className="btn btn-secondary w-100"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Creating Account..." : "Register"}
                 </button>
                 <div className="d-flex justify-content-center pt-4 pb-2">
                   Already have an account? &nbsp;
