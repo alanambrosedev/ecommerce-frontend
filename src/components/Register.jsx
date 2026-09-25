@@ -38,6 +38,9 @@ const Register = () => {
         });
         return;
       }
+      toast.error(
+        result.message || "An unexpected error occurred. Please try again.",
+      );
     } catch (err) {
       toast.error("Network error. Could not connect to the server.");
     }
