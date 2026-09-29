@@ -10,6 +10,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
@@ -23,13 +24,14 @@ const Login = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(data),
       });
 
       const result = await res.json();
 
-      if (res.ok && result.status === 200) {
+      if (result.status === 200) {
         const adminInfo = {
           token: result.token,
           id: result.id,
@@ -37,9 +39,23 @@ const Login = () => {
         };
         login(adminInfo);
         navigate("/admin/dashboard");
-      } else {
-        toast.error(result.message || "Invalid credentials.");
+        return;
       }
+
+      if (res.status === 401 || res.status === 403) {
+        toast.error(result.message || "Invalid email or password.");
+        return;
+      }
+
+      if (res.status === 422 && result.errors) {
+        Object.entries(result.errors).forEach(([field, messages]) => {
+          setError(field, { message: messages[0] });
+        });
+        return;
+      }
+      toast.error(
+        result.message || "An unexpected error occurred. Please try again.",
+      );
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     }
